@@ -6,38 +6,54 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using GraphTutorial.Models;
 
 namespace GraphTutorial
 {
-    public partial class MainPage : ContentPage
+    public partial class MainPage : MasterDetailPage
     {
+        Dictionary<int, NavigationPage> MenuPages = new Dictionary<int, NavigationPage>();
+
         public MainPage()
         {
             InitializeComponent();
+
+            MasterBehavior = MasterBehavior.Popover;
+
+            MenuPages.Add((int)MenuItemType.Welcome, (NavigationPage)Detail);
         }
 
-        protected override async void OnAppearing()
+        public async Task NavigateFromMenu(int id)
         {
-            lblUserName.Text = "Test User";
-            lblUserEmail.Text = "test@contoso.com";
-
-            imgProfilePhoto.Source = ImageSource.FromStream(() => GetUserPhoto());
-        }
-
-        private Stream GetUserPhoto()
-        {
-            return Assembly.GetExecutingAssembly().GetManifestResourceStream("GraphTutorial.no-profile-pic.png");
-        }
-
-        private async void OnUserTapped(object sender, EventArgs e)
-        {
-            var signout = await DisplayAlert("Sign out?", "Do you want to sign out?", "Yes", "No");
-            if (signout)
+            if (!MenuPages.ContainsKey(id))
             {
-                App.SignOut();
+                switch (id)
+                {
+                    case (int)MenuItemType.Welcome:
+                        MenuPages.Add(id, new NavigationPage(new WelcomePage()));
+                        break;
+                    case (int)MenuItemType.Calendar:
+                        MenuPages.Add(id, new NavigationPage(new CalendarPage()));
+                        break;
+                }
+            }
 
-                await Navigation.PushModalAsync(new NavigationPage(new SignInPage()), true);
+            var newPage = MenuPages[id];
+
+            if (newPage != null && Detail != newPage)
+            {
+                Detail = newPage;
+
+                if (Device.RuntimePlatform == Device.Android)
+                    await Task.Delay(100);
+
+                IsPresented = false;
             }
         }
+
+        //public async void SignIn()
+        //{
+        //    App.IsSignedIn = true;
+        //}
     }
 }

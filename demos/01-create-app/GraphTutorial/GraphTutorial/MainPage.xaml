@@ -1,46 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:GraphTutorial"
              x:Class="GraphTutorial.MainPage">
 
-    <ContentPage.Padding>
-        <OnPlatform x:TypeArguments="Thickness">
-            <On Platform="UWP" Value="10, 10, 10, 10" />
-        </OnPlatform>
-    </ContentPage.Padding>
-    <ContentPage.Content>
-        <Grid>
-            <StackLayout x:Name="progressIndicator" IsVisible="false">
-                <ActivityIndicator x:Name="spinner"  IsRunning="false"
-                    VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Color="Gray"/>
-                <Label x:Name="progressMessage" HorizontalOptions="Center" Text="Busy" />
-            </StackLayout>
-            <ScrollView x:Name="mainView" IsVisible="True">
-                <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-                    <Grid HorizontalOptions="FillAndExpand">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Image x:Name="imgProfilePhoto" HorizontalOptions="Center" VerticalOptions="Center" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"/>
-                        <StackLayout HorizontalOptions="Start" VerticalOptions="Center" Grid.Row="0" Grid.Column="1">
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnUserTapped"/>
-                            </StackLayout.GestureRecognizers>
-                            <Label x:Name="lblUserName" Text="" HorizontalOptions="Start" />
-                            <Label x:Name="lblUserEmail" Text="" HorizontalOptions="Start" />
-                            <Label Text="(Tap to sign out)" HorizontalOptions="Start" />
-                        </StackLayout>
-                    </Grid>
-                    
-                </StackLayout>
-            </ScrollView>
-        </Grid>
-    </ContentPage.Content>
+    <MasterDetailPage.Master>
+        <local:MenuPage/>
+    </MasterDetailPage.Master>
 
-</ContentPage>
+    <MasterDetailPage.Detail>
+        <NavigationPage>
+            <x:Arguments>
+                <local:WelcomePage/>
+            </x:Arguments>
+        </NavigationPage>
+    </MasterDetailPage.Detail>
+
+</MasterDetailPage>
