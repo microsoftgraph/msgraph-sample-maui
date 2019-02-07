@@ -22,7 +22,8 @@
                        FontSize="Medium"
                        Margin="10,20,10,20" />
                 <Button Text="Sign in"
-                        Clicked="OnSignIn" />
+                        Clicked="OnSignIn"
+                        HorizontalOptions="Center" />
             </StackLayout>
 
             <!-- Signed in UI -->
@@ -39,7 +40,8 @@
                        FontAttributes="Italic" />
                 <Button Text="Sign out"
                         Margin="0,20,0,20" 
-                        Clicked="OnSignOut" />
+                        Clicked="OnSignOut"
+                        HorizontalOptions="Center" />
                 <ListView x:Name="ListViewMenu"
                           HasUnevenRows="True"
                           HorizontalOptions="Start">
