@@ -20,9 +20,11 @@ namespace GraphTutorial
 
             MasterBehavior = MasterBehavior.Popover;
 
+            // Load the welcome page at start
             MenuPages.Add((int)MenuItemType.Welcome, (NavigationPage)Detail);
         }
 
+        // Navigate to the selected page
         public async Task NavigateFromMenu(int id)
         {
             if (!MenuPages.ContainsKey(id))
@@ -50,10 +52,5 @@ namespace GraphTutorial
                 IsPresented = false;
             }
         }
-
-        //public async void SignIn()
-        //{
-        //    App.IsSignedIn = true;
-        //}
     }
 }

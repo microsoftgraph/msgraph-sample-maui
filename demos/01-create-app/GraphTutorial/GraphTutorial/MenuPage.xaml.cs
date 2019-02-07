@@ -17,19 +17,23 @@ namespace GraphTutorial
         MainPage RootPage { get => Application.Current.MainPage as MainPage; }
         List<NavMenuItem> menuItems;
 
-        public MenuPage ()
+        public MenuPage()
         {
-            InitializeComponent ();
+            InitializeComponent();
 
+            // Add items to the menu
             menuItems = new List<NavMenuItem>
             {
                 new NavMenuItem {Id = MenuItemType.Welcome, Title="Home" },
                 new NavMenuItem {Id = MenuItemType.Calendar, Title="Calendar" }
             };
-
             ListViewMenu.ItemsSource = menuItems;
+
+            // Initialize the selected item
             ListViewMenu.SelectedItem = menuItems[0];
 
+            // Handle the ItemSelected event to navigate to the
+            // selected page
             ListViewMenu.ItemSelected += async (sender, e) =>
             {
                 if (e.SelectedItem == null)

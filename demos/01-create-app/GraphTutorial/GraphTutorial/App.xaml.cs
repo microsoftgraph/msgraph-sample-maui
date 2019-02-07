@@ -11,6 +11,7 @@ namespace GraphTutorial
 {
     public partial class App : Application, INotifyPropertyChanged
     {
+        // Is a user signed in?
         private bool isSignedIn;
         public bool IsSignedIn
         {
@@ -25,6 +26,7 @@ namespace GraphTutorial
 
         public bool IsSignedOut { get { return !isSignedIn; } }
 
+        // The user's display name
         private string userName;
         public string UserName
         {
@@ -36,6 +38,7 @@ namespace GraphTutorial
             }
         }
 
+        // The user's email address
         private string userEmail;
         public string UserEmail
         {
@@ -47,6 +50,7 @@ namespace GraphTutorial
             }
         }
 
+        // The user's profile photo
         private ImageSource userPhoto;
         public ImageSource UserPhoto
         {
@@ -61,6 +65,7 @@ namespace GraphTutorial
         public App()
         {
             InitializeComponent();
+
             isSignedIn = false;
             userPhoto = null;
             UserName = string.Empty;
@@ -101,6 +106,7 @@ namespace GraphTutorial
 
         private Stream GetUserPhoto()
         {
+            // Return the default photo
             return Assembly.GetExecutingAssembly().GetManifestResourceStream("GraphTutorial.no-profile-pic.png");
         }
     }

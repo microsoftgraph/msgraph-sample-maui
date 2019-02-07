@@ -13,7 +13,7 @@
     <ContentPage.Content>
         <StackLayout VerticalOptions="Start" HorizontalOptions="Center">
             <StackLayout x:Name="UserArea" />
-            
+
             <!-- Signed out UI -->
             <StackLayout IsVisible="{Binding Path=IsSignedOut, Source={x:Static Application.Current}}">
                 <Label Text="Sign in to get started"
