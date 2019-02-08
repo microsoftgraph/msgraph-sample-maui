@@ -18,7 +18,7 @@ namespace GraphTutorial
     public partial class App : Application, INotifyPropertyChanged
     {
         // Is a user signed in?
-        private bool isSignedIn;
+        private bool isSignedIn = false;
         public bool IsSignedIn
         {
             get { return isSignedIn; }
@@ -33,7 +33,7 @@ namespace GraphTutorial
         public bool IsSignedOut { get { return !isSignedIn; } }
 
         // The user's display name
-        private string userName;
+        private string userName = string.Empty;
         public string UserName
         {
             get { return userName; }
@@ -45,7 +45,7 @@ namespace GraphTutorial
         }
 
         // The user's email address
-        private string userEmail;
+        private string userEmail = string.Empty;
         public string UserEmail
         {
             get { return userEmail; }
@@ -57,7 +57,7 @@ namespace GraphTutorial
         }
 
         // The user's profile photo
-        private ImageSource userPhoto;
+        private ImageSource userPhoto = null;
         public ImageSource UserPhoto
         {
             get { return userPhoto; }
@@ -79,11 +79,6 @@ namespace GraphTutorial
         public App()
         {
             InitializeComponent();
-
-            isSignedIn = false;
-            userPhoto = null;
-            UserName = string.Empty;
-            UserEmail = string.Empty;
 
             PCA = new PublicClientApplication(OAuthSettings.ApplicationId);
 

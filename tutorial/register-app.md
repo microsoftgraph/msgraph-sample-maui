@@ -8,14 +8,18 @@ In this exercise you will create a new Azure AD native application using the Azu
 
     ![A screenshot of the App registrations ](./images/aad-portal-app-registrations.png)
 
-1. Select **New registration**. On the **Register an application** page, set the **Name** to `Xamarin Graph Tutorial` and choose the **Supported account types** appropriate for your scenario. Do not set a **Redirect URI** on this page. Choose **Register**.
+1. Select **New registration**. On the **Register an application** page, set the values as follows.
+
+    - Set **Name** to `Xamarin Graph Tutorial`.
+    - Set **Supported account types** to **Accounts in any organizational directory and personal Microsoft accounts**.
+    - Leave **Redirect URI** empty.
 
     ![A screenshot of the Register an application page](./images/aad-register-an-app.png)
 
-1. On the **Xamarin Graph Tutorial** page, copy the value of the **Application (client) ID** and save it, you will need it in the next step.
+1. Choose **Register**. On the **Xamarin Graph Tutorial** page, copy the value of the **Application (client) ID** and save it, you will need it in the next step.
 
     ![A screenshot of the application ID of the new app registration](./images/aad-application-id.png)
 
-1. Select the **Add a Redirect URI** link. On the **Redirect URIs** page, locate the **Suggested Redirect URIs for public clients (mobile, desktop)** section. Select the URI that begins with `msal`, copy the value, and choose **Save**. Save the copied redirect URI, you will need it in the next step.
+1. Select the **Add a Redirect URI** link. On the **Redirect URIs** page, locate the **Suggested Redirect URIs for public clients (mobile, desktop)** section. Select the URI that begins with `msal` **and** the **urn:ietf:wg:oauth:2.0:oob** URI. Copy the value that begins with `msal`, then choose **Save**. Save the copied redirect URI, you will need it in the next step.
 
     ![A screenshot of the Redirect URIs page](./images/aad-redirect-uris.png)

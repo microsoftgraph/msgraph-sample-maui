@@ -100,31 +100,17 @@ public ImageSource UserPhoto
         OnPropertyChanged("UserPhoto");
     }
 }
+
+public static UIParent AuthUIParent = null;
 ```
 
-Update the constructor to initialize the new properties.
-
-```cs
-public App()
-{
-    InitializeComponent();
-
-    isSignedIn = false;
-    userPhoto = null;
-    UserName = string.Empty;
-    UserEmail = string.Empty;
-    MainPage = new MainPage();
-}
-```
-
-Now add the following functions to the `App` class. The `SignIn` and `SignOut` functions are just placeholders for now.
+Now add the following functions to the `App` class. The `SignIn`, `SignOut`, and `GetUserInfo` functions are just placeholders for now.
 
 ```cs
 public async Task SignIn()
 {
-    UserPhoto = ImageSource.FromStream(() => GetUserPhoto());
-    UserName = "Adele Vance";
-    UserEmail = "adelev@contoso.com";
+    await GetUserInfo();
+
     IsSignedIn = true;
 }
 
@@ -134,6 +120,13 @@ public async Task SignOut()
     UserName = string.Empty;
     UserEmail = string.Empty;
     IsSignedIn = false;
+}
+
+private async Task GetUserInfo()
+{
+    UserPhoto = ImageSource.FromStream(() => GetUserPhoto());
+    UserName = "Adele Vance";
+    UserEmail = "adelev@contoso.com";
 }
 
 private Stream GetUserPhoto()
