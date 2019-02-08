@@ -12,6 +12,9 @@ using Android.Widget;
 
 namespace GraphTutorial.Droid
 {
+    // This class only exists to create the necessary activity in the Android
+    // manifest. Doing it this way allows the value of the RedirectUri constant
+    // to be inserted at build.
     [Activity(Name = "microsoft.identity.client.BrowserTabActivity")]
     [IntentFilter(new[] { Intent.ActionView },
         Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },

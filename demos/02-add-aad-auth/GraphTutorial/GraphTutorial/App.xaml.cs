@@ -68,6 +68,8 @@ namespace GraphTutorial
             }
         }
 
+        public static UIParent AuthUIParent = null;
+
         // Microsoft Authentication client
         public static PublicClientApplication PCA;
 
@@ -122,7 +124,7 @@ namespace GraphTutorial
             catch (MsalUiRequiredException)
             {
                 // This exception is thrown when an interactive sign-in is required.
-                var authResult = await PCA.AcquireTokenAsync(scopes);
+                var authResult = await PCA.AcquireTokenAsync(scopes, AuthUIParent);
                 Debug.WriteLine($"Access Token: {authResult.AccessToken}");
             }
 
