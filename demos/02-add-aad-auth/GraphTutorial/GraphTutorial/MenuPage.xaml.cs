@@ -55,7 +55,14 @@ namespace GraphTutorial
 
         private async void OnSignIn(object sender, EventArgs e)
         {
-            await (Application.Current as App).SignIn();
+            try
+            {
+                await (Application.Current as App).SignIn();
+            }
+            catch (Microsoft.Identity.Client.MsalException ex)
+            {
+                await DisplayAlert("Sign in error", ex.Message, "OK");
+            }
         }
     }
 }

@@ -1,6 +1,12 @@
-﻿using System;
+﻿using GraphTutorial.Models;
+using Microsoft.Graph;
+using Microsoft.Identity.Client;
+using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -62,6 +68,12 @@ namespace GraphTutorial
             }
         }
 
+        // Microsoft Authentication client
+        private PublicClientApplication PCA;
+
+        // Microsoft Graph client
+        public GraphServiceClient GraphClient;
+
         public App()
         {
             InitializeComponent();
@@ -70,6 +82,9 @@ namespace GraphTutorial
             userPhoto = null;
             UserName = string.Empty;
             UserEmail = string.Empty;
+
+            PCA = new PublicClientApplication(OAuthSettings.ApplicationId);
+
             MainPage = new MainPage();
         }
 
@@ -90,18 +105,73 @@ namespace GraphTutorial
 
         public async Task SignIn()
         {
-            UserPhoto = ImageSource.FromStream(() => GetUserPhoto());
-            UserName = "Adele Vance";
-            UserEmail = "adelev@contoso.com";
+            var scopes = OAuthSettings.Scopes.Split(' ');
+
+            // First, attempt silent sign in
+            // If the user's information is already in the app's cache,
+            // they won't have to sign in again.
+            try
+            {
+                var accounts = await PCA.GetAccountsAsync();
+                var silentAuthResult = await PCA.AcquireTokenSilentAsync(
+                    scopes, accounts.FirstOrDefault());
+
+                Debug.WriteLine("User already signed in.");
+                Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
+            }
+            catch (MsalUiRequiredException)
+            {
+                // This exception is thrown when an interactive sign-in is required.
+                var authResult = await PCA.AcquireTokenAsync(scopes);
+                Debug.WriteLine($"Access Token: {authResult.AccessToken}");
+            }
+
+            // Initialize Graph client
+            //GraphClient = new GraphServiceClient(new DelegateAuthenticationProvider(
+            //    async (requestMessage) =>
+            //    {
+            //        var accounts = await PCA.GetAccountsAsync();
+
+            //        var result = await PCA.AcquireTokenSilentAsync(scopes, accounts.FirstOrDefault());
+
+            //        requestMessage.Headers.Authorization =
+            //            new AuthenticationHeaderValue("Bearer", result.AccessToken);
+            //    }));
+
+            await GetUserInfo();
+
             IsSignedIn = true;
         }
 
         public async Task SignOut()
         {
+            // Get all cached accounts for the app
+            // (Should only be one)
+            var accounts = await PCA.GetAccountsAsync();
+            while (accounts.Any())
+            {
+                // Remove the account info from the cache
+                await PCA.RemoveAsync(accounts.First());
+                accounts = await PCA.GetAccountsAsync();
+            }
+
+            // Clear user information
             UserPhoto = null;
             UserName = string.Empty;
             UserEmail = string.Empty;
             IsSignedIn = false;
+        }
+
+        private async Task GetUserInfo()
+        {
+            // Get the logged on user's profile (/me)
+            //var user = await GraphClient.Me.Request().GetAsync();
+
+            UserPhoto = ImageSource.FromStream(() => GetUserPhoto());
+            UserName = "Adele Vance";
+            UserEmail = "adelev@contoso.com";
+            //UserName = user.DisplayName;
+            //UserEmail = string.IsNullOrEmpty(user.Mail) ? user.UserPrincipalName : user.Mail;
         }
 
         private Stream GetUserPhoto()
