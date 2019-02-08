@@ -69,10 +69,10 @@ namespace GraphTutorial
         }
 
         // Microsoft Authentication client
-        private PublicClientApplication PCA;
+        public static PublicClientApplication PCA;
 
         // Microsoft Graph client
-        public GraphServiceClient GraphClient;
+        public static GraphServiceClient GraphClient;
 
         public App()
         {

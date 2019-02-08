@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Identity.Client;
 
 using Foundation;
 using UIKit;
@@ -25,7 +26,17 @@ namespace GraphTutorial.iOS
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 
+            App.PCA.iOSKeychainSecurityGroup = "com.graphdevx.GraphTutorial";
+
             return base.FinishedLaunching(app, options);
+        }
+
+        // Handling redirect URL
+        // See: https://github.com/azuread/microsoft-authentication-library-for-dotnet/wiki/Xamarin-iOS-specifics
+        public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
+        {
+            AuthenticationContinuationHelper.SetAuthenticationContinuationEventArgs(url);
+            return true;
         }
     }
 }
