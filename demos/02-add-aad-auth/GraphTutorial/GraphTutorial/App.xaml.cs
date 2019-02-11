@@ -68,9 +68,10 @@ namespace GraphTutorial
             }
         }
 
+        // UIParent used by Android version of the app
         public static UIParent AuthUIParent = null;
 
-        // Microsoft Authentication client
+        // Microsoft Authentication client for native/mobile apps
         public static PublicClientApplication PCA;
 
         // Microsoft Graph client
@@ -119,6 +120,7 @@ namespace GraphTutorial
             catch (MsalUiRequiredException)
             {
                 // This exception is thrown when an interactive sign-in is required.
+                // Prompt the user to sign-in
                 var authResult = await PCA.AcquireTokenAsync(scopes, AuthUIParent);
                 Debug.WriteLine($"Access Token: {authResult.AccessToken}");
             }

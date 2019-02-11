@@ -41,7 +41,7 @@
 			<string>com.graphdevx.GraphTutorial</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string></string>
+				<string>YOUR_REDIRECT_URI_HERE</string>
 			</array>
 			<key>CFBundleURLTypes</key>
 			<string>Editor</string>

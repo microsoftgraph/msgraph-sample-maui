@@ -1,5 +1,4 @@
-﻿using Microsoft.Identity.Client;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
@@ -62,8 +61,6 @@ namespace GraphTutorial
                 OnPropertyChanged("UserPhoto");
             }
         }
-
-        public static UIParent AuthUIParent = null;
 
         public App()
         {

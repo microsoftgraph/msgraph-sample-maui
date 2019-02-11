@@ -100,8 +100,6 @@ public ImageSource UserPhoto
         OnPropertyChanged("UserPhoto");
     }
 }
-
-public static UIParent AuthUIParent = null;
 ```
 
 Now add the following functions to the `App` class. The `SignIn`, `SignOut`, and `GetUserInfo` functions are just placeholders for now.

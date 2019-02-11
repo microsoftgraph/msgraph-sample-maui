@@ -26,6 +26,7 @@ namespace GraphTutorial.iOS
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 
+            // Specify the Keychain access group
             App.PCA.iOSKeychainSecurityGroup = "com.graphdevx.GraphTutorial";
 
             return base.FinishedLaunching(app, options);
