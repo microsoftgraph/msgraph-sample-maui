@@ -5,9 +5,11 @@
              x:Class="GraphTutorial.CalendarPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="CALENDAR"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <Editor x:Name="JSONResponse"
+                    IsSpellCheckEnabled="False"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand"
+                    FontFamily="Courier New"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
