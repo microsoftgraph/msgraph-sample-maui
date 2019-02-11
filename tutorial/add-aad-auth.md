@@ -100,6 +100,16 @@ while (accounts.Any())
 }
 ```
 
+Finally, update the `MainPage` class to sign-in when it loads. Add the following function to the `MainPage` class in **MainPage.xaml.cs**.
+
+```cs
+protected override async void OnAppearing()
+{
+    base.OnAppearing();
+    await (Application.Current as App).SignIn();
+}
+```
+
 ### Update Android project to enable sign-in
 
 When used in a Xamarin Android project, the Microsoft Authentication Library has a few [requirements specific to Android](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/Xamarin-Android-specifics).
@@ -192,3 +202,38 @@ When the Microsoft Authentication Library is used in a Xamarin project, it takes
 At this point if you run the application and tap the **Sign in** button, you are prompted to sign in. On successful sign in, you should see the access token printed into the debugger's output.
 
 ![A screenshot of the Output window in Visual Studio](./images/debugger-access-token.png)
+
+## Get user details
+
+Now update the `SignIn` function in **App.xaml.cs** to initialize the `GraphServiceClient`. Add the following code before the `await GetUserInfo();` line.
+
+```cs
+// Initialize Graph client
+GraphClient = new GraphServiceClient(new DelegateAuthenticationProvider(
+    async (requestMessage) =>
+    {
+        var accounts = await PCA.GetAccountsAsync();
+
+        var result = await PCA.AcquireTokenSilentAsync(scopes, accounts.FirstOrDefault());
+
+        requestMessage.Headers.Authorization =
+            new AuthenticationHeaderValue("Bearer", result.AccessToken);
+    }));
+```
+
+Now update the `GetUserInfo` function to get the user's details from the Microsoft Graph. Replace the existing `GetUserInfo` function with the following.
+
+```cs
+private async Task GetUserInfo()
+{
+    // Get the logged on user's profile (/me)
+    var user = await GraphClient.Me.Request().GetAsync();
+
+    UserPhoto = ImageSource.FromStream(() => GetUserPhoto());
+    UserName = user.DisplayName;
+    UserEmail = string.IsNullOrEmpty(user.Mail) ? user.UserPrincipalName : user.Mail;
+}
+```
+
+If you save your changes and run the app now, after sign-in the UI is updated with the user's display name and email address.
+

@@ -126,16 +126,16 @@ namespace GraphTutorial
             }
 
             // Initialize Graph client
-            //GraphClient = new GraphServiceClient(new DelegateAuthenticationProvider(
-            //    async (requestMessage) =>
-            //    {
-            //        var accounts = await PCA.GetAccountsAsync();
+            GraphClient = new GraphServiceClient(new DelegateAuthenticationProvider(
+                async (requestMessage) =>
+                {
+                    var accounts = await PCA.GetAccountsAsync();
 
-            //        var result = await PCA.AcquireTokenSilentAsync(scopes, accounts.FirstOrDefault());
+                    var result = await PCA.AcquireTokenSilentAsync(scopes, accounts.FirstOrDefault());
 
-            //        requestMessage.Headers.Authorization =
-            //            new AuthenticationHeaderValue("Bearer", result.AccessToken);
-            //    }));
+                    requestMessage.Headers.Authorization =
+                        new AuthenticationHeaderValue("Bearer", result.AccessToken);
+                }));
 
             await GetUserInfo();
 
@@ -164,13 +164,11 @@ namespace GraphTutorial
         private async Task GetUserInfo()
         {
             // Get the logged on user's profile (/me)
-            //var user = await GraphClient.Me.Request().GetAsync();
+            var user = await GraphClient.Me.Request().GetAsync();
 
             UserPhoto = ImageSource.FromStream(() => GetUserPhoto());
-            UserName = "Adele Vance";
-            UserEmail = "adelev@contoso.com";
-            //UserName = user.DisplayName;
-            //UserEmail = string.IsNullOrEmpty(user.Mail) ? user.UserPrincipalName : user.Mail;
+            UserName = user.DisplayName;
+            UserEmail = string.IsNullOrEmpty(user.Mail) ? user.UserPrincipalName : user.Mail;
         }
 
         private Stream GetUserPhoto()
