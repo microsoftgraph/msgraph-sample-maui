@@ -160,4 +160,4 @@ CalendarList.ItemsSource = events.CurrentPage.ToList();
 
 Run the app, sign in, and click the **Calendar** navigation item. You should see the list of events with the **Start** and **End** values formatted.
 
-![A screenshot of the table of events](./images/add-msgraph-01.png)
+![A screenshot of the table of events](./images/calendar-page.png)
