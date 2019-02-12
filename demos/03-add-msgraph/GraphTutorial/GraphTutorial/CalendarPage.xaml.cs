@@ -29,7 +29,8 @@ namespace GraphTutorial
                 .GetAsync();
 
             // Temporary
-            JSONResponse.Text = JsonConvert.SerializeObject(events.CurrentPage, Formatting.Indented);
+            //JSONResponse.Text = JsonConvert.SerializeObject(events.CurrentPage, Formatting.Indented);
+            CalendarList.ItemsSource = events.CurrentPage.ToList();
         }
     }
 }
