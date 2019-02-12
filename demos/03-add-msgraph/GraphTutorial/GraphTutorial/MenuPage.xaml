@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="true"
+             Title="Menu"
+             x:Class="GraphTutorial.MenuPage">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="UWP" Value="10, 10, 10, 10" />
+        </OnPlatform>
+    </ContentPage.Padding>
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="Start" HorizontalOptions="Center">
+            <StackLayout x:Name="UserArea" />
+
+            <!-- Signed out UI -->
+            <StackLayout IsVisible="{Binding Path=IsSignedOut, Source={x:Static Application.Current}}">
+                <Label Text="Sign in to get started"
+                       HorizontalOptions="Center"
+                       FontAttributes="Bold"
+                       FontSize="Medium"
+                       Margin="10,20,10,20" />
+                <Button Text="Sign in"
+                        Clicked="OnSignIn"
+                        HorizontalOptions="Center" />
+            </StackLayout>
+
+            <!-- Signed in UI -->
+            <StackLayout IsVisible="{Binding Path=IsSignedIn, Source={x:Static Application.Current}}">
+                <Image Source="{Binding Path=UserPhoto, Source={x:Static Application.Current}}"
+                       HorizontalOptions="Center"
+                       Margin="0,20,0,10" />
+                <Label Text="{Binding Path=UserName, Source={x:Static Application.Current}}"
+                       HorizontalOptions="Center"
+                       FontAttributes="Bold"
+                       FontSize="Small" />
+                <Label Text="{Binding Path=UserEmail, Source={x:Static Application.Current}}"
+                       HorizontalOptions="Center"
+                       FontAttributes="Italic" />
+                <Button Text="Sign out"
+                        Margin="0,20,0,20" 
+                        Clicked="OnSignOut"
+                        HorizontalOptions="Center" />
+                <ListView x:Name="ListViewMenu"
+                          HasUnevenRows="True"
+                          HorizontalOptions="Start">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid Padding="10">
+                                    <Label Text="{Binding Title}" FontSize="20"/>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
