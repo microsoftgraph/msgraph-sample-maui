@@ -28,8 +28,7 @@ namespace GraphTutorial
                 .OrderBy("createdDateTime DESC")
                 .GetAsync();
 
-            // Temporary
-            //JSONResponse.Text = JsonConvert.SerializeObject(events.CurrentPage, Formatting.Indented);
+            // Add the events to the list view
             CalendarList.ItemsSource = events.CurrentPage.ToList();
         }
     }
