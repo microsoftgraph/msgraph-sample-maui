@@ -6,7 +6,7 @@ This module will introduce you to working with the Microsoft Graph SDK to access
 
 In this lab you will create a Xamarin application using the Azure AD v2 authentication endpoint and the Microsoft Authentication Library (MSAL) to access data in Office 365 using the Microsoft Graph.
 
-- [Xamarin Microsoft Graph tutorial](https://docs.microsoft.com/graph/training/xamarin-tutorial)
+- [Xamarin Microsoft Graph tutorial](https://docs.microsoft.com/graph/tutorials/xamarin)
 
 ## Demos
 
