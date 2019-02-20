@@ -12,9 +12,9 @@ In this lab you will create a Xamarin application using the Azure AD v2 authenti
 
 The [Demos](./demos) directory in this repository contains copies of the project that correspond to completing individual sections of the tutorial. If you just want to demo a particular section of the tutorial, you can start with the version from the previous section.
 
-- [01-create-app](demos/01-create-app): Completed [Create a Xamarin app](https://docs.microsoft.com/graph/training/xamarin-tutorial?tutorial-step=1)
-- [02-add-aad-auth](demos/02-add-aad-auth): Completed [Add Azure AD authentication](https://docs.microsoft.com/graph/training/xamarin-tutorial?tutorial-step=3)
-- [03-add-msgraph](demos/03-add-msgraph): Completed [Get calendar data](https://docs.microsoft.com/graph/training/xamarin-tutorial?tutorial-step=4)
+- [01-create-app](demos/01-create-app): Completed [Create a Xamarin app](https://docs.microsoft.com/graph/tutorials/xamarin?tutorial-step=1)
+- [02-add-aad-auth](demos/02-add-aad-auth): Completed [Add Azure AD authentication](https://docs.microsoft.com/graph/tutorials/xamarin?tutorial-step=3)
+- [03-add-msgraph](demos/03-add-msgraph): Completed [Get calendar data](https://docs.microsoft.com/graph/tutorials/xamarin?tutorial-step=4)
 
 ## Completed sample
 
