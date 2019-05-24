@@ -1,17 +1,16 @@
-﻿using System;
+﻿using GraphTutorial.Models;
+using Microsoft.Identity.Client;
+using Microsoft.Graph;
+using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
-using GraphTutorial.Models;
-using Microsoft.Identity.Client;
-using Microsoft.Graph;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http.Headers;
 
 namespace GraphTutorial
 {
@@ -71,6 +70,9 @@ namespace GraphTutorial
         // UIParent used by Android version of the app
         public static object AuthUIParent = null;
 
+        // Keychain security group used by iOS version of the app
+        public static string iOSKeychainSecurityGroup = null;
+
         // Microsoft Authentication client for native/mobile apps
         public static IPublicClientApplication PCA;
 
@@ -80,6 +82,16 @@ namespace GraphTutorial
         public App()
         {
             InitializeComponent();
+
+            var builder = PublicClientApplicationBuilder
+                .Create(OAuthSettings.ApplicationId);
+
+            if (!string.IsNullOrEmpty(iOSKeychainSecurityGroup))
+            {
+                builder = builder.WithIosKeychainSecurityGroup(iOSKeychainSecurityGroup);
+            }
+
+            PCA = builder.Build();
 
             MainPage = new MainPage();
         }
@@ -101,6 +113,49 @@ namespace GraphTutorial
 
         public async Task SignIn()
         {
+            var scopes = OAuthSettings.Scopes.Split(' ');
+
+            // First, attempt silent sign in
+            // If the user's information is already in the app's cache,
+            // they won't have to sign in again.
+            try
+            {
+                var accounts = await PCA.GetAccountsAsync();
+                var silentAuthResult = await PCA.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
+                    .ExecuteAsync();
+
+                Debug.WriteLine("User already signed in.");
+                Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
+            }
+            catch (MsalUiRequiredException)
+            {
+                // This exception is thrown when an interactive sign-in is required.
+                // Prompt the user to sign-in
+                var interactiveRequest = PCA.AcquireTokenInteractive(scopes);
+
+                if (AuthUIParent != null)
+                {
+                    interactiveRequest = interactiveRequest
+                        .WithParentActivityOrWindow(AuthUIParent);
+                }
+
+                var authResult = await interactiveRequest.ExecuteAsync();
+                Debug.WriteLine($"Access Token: {authResult.AccessToken}");
+            }
+
+            // Initialize Graph client
+            GraphClient = new GraphServiceClient(new DelegateAuthenticationProvider(
+                async (requestMessage) =>
+                {
+                    var accounts = await PCA.GetAccountsAsync();
+
+                    var result = await PCA.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
+                        .ExecuteAsync();
+
+                    requestMessage.Headers.Authorization =
+                        new AuthenticationHeaderValue("Bearer", result.AccessToken);
+                }));
+
             await GetUserInfo();
 
             IsSignedIn = true;
@@ -108,6 +163,16 @@ namespace GraphTutorial
 
         public async Task SignOut()
         {
+            // Get all cached accounts for the app
+            // (Should only be one)
+            var accounts = await PCA.GetAccountsAsync();
+            while (accounts.Any())
+            {
+                // Remove the account info from the cache
+                await PCA.RemoveAsync(accounts.First());
+                accounts = await PCA.GetAccountsAsync();
+            }
+
             UserPhoto = null;
             UserName = string.Empty;
             UserEmail = string.Empty;
@@ -116,9 +181,12 @@ namespace GraphTutorial
 
         private async Task GetUserInfo()
         {
+            // Get the logged on user's profile (/me)
+            var user = await GraphClient.Me.Request().GetAsync();
+
             UserPhoto = ImageSource.FromStream(() => GetUserPhoto());
-            UserName = "Adele Vance";
-            UserEmail = "adelev@contoso.com";
+            UserName = user.DisplayName;
+            UserEmail = string.IsNullOrEmpty(user.Mail) ? user.UserPrincipalName : user.Mail;
         }
 
         private Stream GetUserPhoto()

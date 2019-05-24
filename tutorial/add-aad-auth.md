@@ -40,6 +40,9 @@ Add the following properties to the `App` class.
 // UIParent used by Android version of the app
 public static object AuthUIParent = null;
 
+// Keychain security group used by iOS version of the app
+public static string iOSKeychainSecurityGroup = null;
+
 // Microsoft Authentication client for native/mobile apps
 public static IPublicClientApplication PCA;
 
@@ -54,7 +57,15 @@ public App()
 {
     InitializeComponent();
 
-    PCA = new PublicClientApplication(OAuthSettings.ApplicationId);
+    var builder = PublicClientApplicationBuilder
+        .Create(OAuthSettings.ApplicationId);
+
+    if (!string.IsNullOrEmpty(iOSKeychainSecurityGroup))
+    {
+        builder = builder.WithIosKeychainSecurityGroup(iOSKeychainSecurityGroup);
+    }
+
+    PCA = builder.Build();
 
     MainPage = new MainPage();
 }
@@ -71,8 +82,8 @@ var scopes = OAuthSettings.Scopes.Split(' ');
 try
 {
     var accounts = await PCA.GetAccountsAsync();
-    var silentAuthResult = await PCA.AcquireTokenSilentAsync(
-        scopes, accounts.FirstOrDefault());
+    var silentAuthResult = await PCA.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
+        .ExecuteAsync();
 
     Debug.WriteLine("User already signed in.");
     Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
@@ -81,12 +92,20 @@ catch (MsalUiRequiredException)
 {
     // This exception is thrown when an interactive sign-in is required.
     // Prompt the user to sign-in
-    var authResult = await PCA.AcquireTokenAsync(scopes, AuthUIParent);
+    var interactiveRequest = PCA.AcquireTokenInteractive(scopes);
+
+    if (AuthUIParent != null)
+    {
+        interactiveRequest = interactiveRequest
+            .WithParentActivityOrWindow(AuthUIParent);
+    }
+
+    var authResult = await interactiveRequest.ExecuteAsync();
     Debug.WriteLine($"Access Token: {authResult.AccessToken}");
 }
 ```
 
-This code first attempts to get an access token silently. If a user's information is already in the app's cache (for example, if the user closed the app previously without signing out), this will succeed, and there's no reason to prompt the user. If there is not a user's information in the cache, the `AcquireTokenSilentAsync` function throws an `MsalUiRequiredException`. In this case, the code calls the interactive function to get a token, `AcquireTokenAsync`.
+This code first attempts to get an access token silently. If a user's information is already in the app's cache (for example, if the user closed the app previously without signing out), this will succeed, and there's no reason to prompt the user. If there is not a user's information in the cache, the `AcquireTokenSilent().ExecuteAsync()` function throws an `MsalUiRequiredException`. In this case, the code calls the interactive function to get a token, `AcquireTokenInteractive`.
 
 Now update the `SignOut` function to remove the user's information from the cache. Add the following code to the beginning of the `SignOut` function.
 
@@ -163,10 +182,10 @@ Next, you need to register the redirect URI you configured in the app registrati
 
 - On the **Application** tab, check that the value of **Bundle identifier** matches the value you set for **Keychain Groups** in **Entitlements.plist**. If it doesn't, update it now.
 - On the **Advanced** tab, locate the **URL Types** section. Add a URL type here with the following values:
-    - **Identifier**: set to the value of your **Bundle identifier**
-    - **URL Schemes**: set to the redirect URI from your app registration that begins with `msal`
-    - **Role**: `Editor`
-    - **Icon**: Leave empty
+  - **Identifier**: set to the value of your **Bundle identifier**
+  - **URL Schemes**: set to `msal{YOUR-APP-ID}`. For example, if your app ID is `67ad5eba-0cfc-414d-8f9f-0a6d973a907c`, you would set this to `msal67ad5eba-0cfc-414d-8f9f-0a6d973a907c`.
+  - **Role**: `Editor`
+  - **Icon**: Leave empty
 
 ![A screenshot of the URL Types section of Info.plist](./images/add-url-type.png)
 
@@ -180,7 +199,7 @@ Add the following line to `FinishedLaunching` function just before the `return` 
 
 ```cs
 // Specify the Keychain access group
-App.PCA.iOSKeychainSecurityGroup = "com.graphdevx.GraphTutorial";
+App.iOSKeychainSecurityGroup = NSBundle.MainBundle.BundleIdentifier;
 ```
 
 Finally, override the `OpenUrl` function to pass the URL to the MSAL library. Add the following to the `AppDelegate` class.
@@ -216,7 +235,8 @@ GraphClient = new GraphServiceClient(new DelegateAuthenticationProvider(
     {
         var accounts = await PCA.GetAccountsAsync();
 
-        var result = await PCA.AcquireTokenSilentAsync(scopes, accounts.FirstOrDefault());
+        var result = await PCA.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
+            .ExecuteAsync();
 
         requestMessage.Headers.Authorization =
             new AuthenticationHeaderValue("Bearer", result.AccessToken);
@@ -238,4 +258,3 @@ private async Task GetUserInfo()
 ```
 
 If you save your changes and run the app now, after sign-in the UI is updated with the user's display name and email address.
-

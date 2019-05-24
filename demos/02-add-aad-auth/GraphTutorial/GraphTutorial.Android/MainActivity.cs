@@ -1,11 +1,13 @@
 ﻿using System;
 
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Microsoft.Identity.Client;
 
 namespace GraphTutorial.Droid
 {
@@ -28,6 +30,13 @@ namespace GraphTutorial.Droid
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+            AuthenticationContinuationHelper
+                .SetAuthenticationContinuationEventArgs(requestCode, resultCode, data);
         }
     }
 }
