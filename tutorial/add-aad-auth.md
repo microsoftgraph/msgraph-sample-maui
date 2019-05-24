@@ -10,13 +10,12 @@ namespace GraphTutorial.Models
     public static class OAuthSettings
     {
         public const string ApplicationId = "YOUR_APP_ID_HERE";
-        public const string RedirectUri = "YOUR_REDIRECT_URI_HERE";
         public const string Scopes = "User.Read Calendars.Read";
     }
 }
 ```
 
-Replace `YOUR_APP_ID_HERE` with the application ID from your app registration, and replace `YOUR_REDIRECT_URI_HERE` with the redirect URI you copied from your app registration (the one that begins with `msal`).
+Replace `YOUR_APP_ID_HERE` with the application ID from your app registration.
 
 > [!IMPORTANT]
 > If you're using source control such as git, now would be a good time to exclude the `OAuthSettings.cs` file from source control to avoid inadvertently leaking your app ID.
@@ -135,19 +134,28 @@ protected override async void OnAppearing()
 
 When used in a Xamarin Android project, the Microsoft Authentication Library has a few [requirements specific to Android](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/Xamarin-Android-specifics).
 
-First, you need to add the redirect URI from your app registration to the Android manifest. To do this, add a new activity to the **GraphTutorial.Android** project. Right-click the **GraphTutorial.Android** and choose **Add**, then **New Item...**. Choose **Activity**, name the activity `MsalActivity`, and choose **Add**.
+First, you need to update the Android manifest to register the redirect URI. In **GraphTutorial.Android** project, expand the **Properties** folder, then open **AndroidManifest.xml**. If you're using Visual Studio for Mac, switch to the **Source** view using the tabs at the bottom of the file. Replace the entire contents with the following.
 
-Open the **MsalActivity.cs** file and delete the `[Activity(Label = "MsalActivity")]` line, then add the following attributes above the class declaration.
-
-```cs
-// This class only exists to create the necessary activity in the Android
-// manifest. Doing it this way allows the value of the RedirectUri constant
-// to be inserted at build.
-[Activity(Name = "microsoft.identity.client.BrowserTabActivity")]
-[IntentFilter(new[] { Intent.ActionView },
-    Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
-    DataScheme = Models.OAuthSettings.RedirectUri, DataHost = "auth")]
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.companyname.GraphTutorial">
+    <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
+    <application android:label="GraphTutorial.Android">
+        <activity android:name="microsoft.identity.client.BrowserTabActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="msalYOUR_APP_ID_HERE" android:host="auth" />
+            </intent-filter>
+        </activity>
+    </application>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+</manifest>
 ```
+
+Replace `YOUR_APP_ID_HERE` with your application ID from your app registration.
 
 Next, open **MainActivity.cs** and add the following `using` statements to the top of the file.
 
@@ -165,6 +173,12 @@ protected override void OnActivityResult(int requestCode, Result resultCode, Int
     AuthenticationContinuationHelper
         .SetAuthenticationContinuationEventArgs(requestCode, resultCode, data);
 }
+```
+
+Finally, in the `OnCreate` function, add the following line after the `LoadApplication(new App());` line.
+
+```cs
+App.AuthUIParent = this;
 ```
 
 ### Update iOS project to enable sign-in
