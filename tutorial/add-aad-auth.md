@@ -16,6 +16,8 @@ namespace GraphTutorial.Models
 }
 ```
 
+Replace `YOUR_APP_ID_HERE` with the application ID from your app registration, and replace `YOUR_REDIRECT_URI_HERE` with the redirect URI you copied from your app registration (the one that begins with `msal`).
+
 > [!IMPORTANT]
 > If you're using source control such as git, now would be a good time to exclude the `OAuthSettings.cs` file from source control to avoid inadvertently leaking your app ID.
 
@@ -36,10 +38,10 @@ Add the following properties to the `App` class.
 
 ```cs
 // UIParent used by Android version of the app
-public static UIParent AuthUIParent = null;
+public static object AuthUIParent = null;
 
 // Microsoft Authentication client for native/mobile apps
-public static PublicClientApplication PCA;
+public static IPublicClientApplication PCA;
 
 // Microsoft Graph client
 public static GraphServiceClient GraphClient;

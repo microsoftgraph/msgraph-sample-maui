@@ -1,0 +1,9 @@
+﻿namespace GraphTutorial.Models
+{
+    public static class OAuthSettings
+    {
+        public const string ApplicationId = "YOUR_APP_ID_HERE";
+        public const string RedirectUri = "YOUR_REDIRECT_URI_HERE";
+        public const string Scopes = "User.Read Calendars.Read";
+    }
+}

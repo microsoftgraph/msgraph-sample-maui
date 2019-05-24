@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+using GraphTutorial.Models;
+using Microsoft.Identity.Client;
+using Microsoft.Graph;
+using System.Diagnostics;
+using System.Linq;
+using System.Net.Http.Headers;
+
 namespace GraphTutorial
 {
     public partial class App : Application, INotifyPropertyChanged
@@ -60,6 +67,15 @@ namespace GraphTutorial
                 OnPropertyChanged("UserPhoto");
             }
         }
+
+        // UIParent used by Android version of the app
+        public static object AuthUIParent = null;
+
+        // Microsoft Authentication client for native/mobile apps
+        public static IPublicClientApplication PCA;
+
+        // Microsoft Graph client
+        public static GraphServiceClient GraphClient;
 
         public App()
         {
