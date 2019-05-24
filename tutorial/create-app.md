@@ -1,19 +1,19 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-Open Visual Studio, and select **File > New > Project**. In the **New Project** dialog, do the following:
+Open Visual Studio, and select **Create a new project**. In the **Create a new project** dialog, choose **Mobile App (Xamarin.Forms)**, then choose **Next**.
 
-1. Select **Visual C# > Cross-Platform**.
-1. Select **Mobile App (Xamarin.Forms)**.
-1. Enter **GraphTutorial** for the Name of the project.
+![Visual Studio 2019 create new project dialog](images/new-project-dialog.png)
 
-![Visual Studio 2017 create new project dialog](images/new-project-dialog.png)
+In the **Configure a new project** dialog, enter `GraphTutorial` for the **Project name** and **Solution name**, then choose **Create**.
 
 > [!IMPORTANT]
 > Ensure that you enter the exact same name for the Visual Studio Project that is specified in these lab instructions. The Visual Studio Project name becomes part of the namespace in the code. The code inside these instructions depends on the namespace matching the Visual Studio Project name specified in these instructions. If you use a different project name the code will not compile unless you adjust all the namespaces to match the Visual Studio Project name you enter when you create the project.
 
-Select **OK**. In the **New Cross Platform App** dialog, select the **Blank** template, and ensure that the **Code Sharing Strategy** selection is **.NET Standard**. If you plan to skip a specific platform, you can unselect it now under **Platforms**. Select **OK** to create the solution.
+![Visual Studio 2019 configure new project dialog](images/configure-new-project-dialog.png)
 
-![Visual Studio 2017 new cross platform app dialog](images/new-cross-platform-app-dialog.png)
+In the **New Cross Platform App** dialog, select the **Blank** template, and select the platforms you want to build under **Platforms**. Select **OK** to create the solution.
+
+![Visual Studio 2019 new cross platform app dialog](images/new-cross-platform-app-dialog.png)
 
 Before moving on, install some additional NuGet packages that you will use later.
 
@@ -23,11 +23,10 @@ Before moving on, install some additional NuGet packages that you will use later
 Select **Tools > NuGet Package Manager > Package Manager Console**. In the Package Manager Console, enter the following commands.
 
 ```Powershell
-Install-Package Microsoft.Identity.Client -Version 2.7.0 -Project GraphTutorial
-Install-Package Xamarin.Android.Support.Compat -Version 27.0.2.1 -Project GraphTutorial.Android
-Install-Package Microsoft.Identity.Client -Version 2.7.0 -Project GraphTutorial.Android
-Install-Package Microsoft.Identity.Client -Version 2.7.0 -Project GraphTutorial.iOS
-Install-Package Microsoft.Graph -Version 1.12.0 -Project GraphTutorial
+Install-Package Microsoft.Identity.Client -Version 3.0.8 -Project GraphTutorial
+Install-Package Microsoft.Identity.Client -Version 3.0.8 -Project GraphTutorial.Android
+Install-Package Microsoft.Identity.Client -Version 3.0.8 -Project GraphTutorial.iOS
+Install-Package Microsoft.Graph -Version 1.15.0 -Project GraphTutorial
 ```
 
 ## Design the app
@@ -275,7 +274,7 @@ namespace GraphTutorial
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MenuPage : ContentPage
     {
-        MainPage RootPage { get => Application.Current.MainPage as MainPage; }
+        MainPage RootPage => Application.Current.MainPage as MainPage;
         List<NavMenuItem> menuItems;
 
         public MenuPage ()
@@ -321,6 +320,9 @@ namespace GraphTutorial
     }
 }
 ```
+
+> [!NOTE]
+> Visual Studio will report errors in **MenuPage.xaml.cs**. These errors will be resolved in a later step.
 
 #### Implement the welcome page
 

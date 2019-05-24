@@ -14,7 +14,7 @@ You should also have Xamarin installed as part of your Visual Studio installatio
 Optionally you should also have access to a Mac with Visual Studio for Mac installed. If you do not have access, you can still complete this tutorial, but will be unable to complete the iOS-specific sections.
 
 > [!NOTE]
-> This tutorial was written with Visual Studio 2017 version 15.9.6 and Visual Studio for Mac version 7.7.4. Both machines have then Android SDK Platform 27 installed. The steps in this guide may work with other versions, but that has not been tested.
+> This tutorial was written with Visual Studio 2019 version 16.1.0 and Visual Studio for Mac version 7.7.4. Both machines have the Android SDK Platform 28 installed. The steps in this guide may work with other versions, but that has not been tested.
 
 ## Feedback
 
