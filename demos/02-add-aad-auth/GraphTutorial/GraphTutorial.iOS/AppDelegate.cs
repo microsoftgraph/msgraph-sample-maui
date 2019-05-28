@@ -24,10 +24,10 @@ namespace GraphTutorial.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
-            LoadApplication(new App());
-
             // Specify the Keychain access group
             App.iOSKeychainSecurityGroup = NSBundle.MainBundle.BundleIdentifier;
+
+            LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
         }

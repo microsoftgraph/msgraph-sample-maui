@@ -118,18 +118,29 @@ namespace GraphTutorial
             // First, attempt silent sign in
             // If the user's information is already in the app's cache,
             // they won't have to sign in again.
+            string accessToken = string.Empty;
             try
             {
                 var accounts = await PCA.GetAccountsAsync();
-                var silentAuthResult = await PCA.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
-                    .ExecuteAsync();
+                if (accounts.Count() > 0)
+                {
+                    var silentAuthResult = await PCA
+                        .AcquireTokenSilent(scopes, accounts.FirstOrDefault())
+                        .ExecuteAsync();
 
-                Debug.WriteLine("User already signed in.");
-                Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
+                    Debug.WriteLine("User already signed in.");
+                    Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
+                    accessToken = silentAuthResult.AccessToken;
+                }
             }
             catch (MsalUiRequiredException)
             {
                 // This exception is thrown when an interactive sign-in is required.
+                Debug.WriteLine("Silent token request failed, user needs to sign-in");
+            }
+
+            if (string.IsNullOrEmpty(accessToken))
+            {
                 // Prompt the user to sign-in
                 var interactiveRequest = PCA.AcquireTokenInteractive(scopes);
 

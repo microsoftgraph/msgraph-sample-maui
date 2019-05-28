@@ -24,12 +24,6 @@ namespace GraphTutorial
             MenuPages.Add((int)MenuItemType.Welcome, (NavigationPage)Detail);
         }
 
-        protected override async void OnAppearing()
-        {
-            base.OnAppearing();
-            await (Application.Current as App).SignIn();
-        }
-
         // Navigate to the selected page
         public async Task NavigateFromMenu(int id)
         {

@@ -78,18 +78,29 @@ var scopes = OAuthSettings.Scopes.Split(' ');
 // First, attempt silent sign in
 // If the user's information is already in the app's cache,
 // they won't have to sign in again.
+string accessToken = string.Empty;
 try
 {
     var accounts = await PCA.GetAccountsAsync();
-    var silentAuthResult = await PCA.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
-        .ExecuteAsync();
+    if (accounts.Count() > 0)
+    {
+        var silentAuthResult = await PCA
+            .AcquireTokenSilent(scopes, accounts.FirstOrDefault())
+            .ExecuteAsync();
 
-    Debug.WriteLine("User already signed in.");
-    Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
+        Debug.WriteLine("User already signed in.");
+        Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
+        accessToken = silentAuthResult.AccessToken;
+    }
 }
 catch (MsalUiRequiredException)
 {
     // This exception is thrown when an interactive sign-in is required.
+    Debug.WriteLine("Silent token request failed, user needs to sign-in");
+}
+
+if (string.IsNullOrEmpty(accessToken))
+{
     // Prompt the user to sign-in
     var interactiveRequest = PCA.AcquireTokenInteractive(scopes);
 
@@ -117,16 +128,6 @@ while (accounts.Any())
     // Remove the account info from the cache
     await PCA.RemoveAsync(accounts.First());
     accounts = await PCA.GetAccountsAsync();
-}
-```
-
-Finally, update the `MainPage` class to sign-in when it loads. Add the following function to the `MainPage` class in **MainPage.xaml.cs**.
-
-```cs
-protected override async void OnAppearing()
-{
-    base.OnAppearing();
-    await (Application.Current as App).SignIn();
 }
 ```
 
@@ -184,7 +185,7 @@ App.AuthUIParent = this;
 ### Update iOS project to enable sign-in
 
 > [!IMPORTANT]
-> Because MSAL requires use of an Entitlements.plist file, you must configure Visual Studio with your Apple developer account to enable provisioning. For more information, see [Device provisioning for Xamarin.iOS](/xamarin/ios/get-started/installation/device-provisioning).
+> Because MSAL requires use of an Entitlements.plist file, you must configure Visual Studio with your Apple developer account to enable provisioning. If you are running this tutorial in the iPhone simulator, you need to add **Entitlements.plist** in the **Custom Entitlements** field in **GraphTutorial.iOS** project's settings, **Build->iOS Bundle Signing**. For more information, see [Device provisioning for Xamarin.iOS](/xamarin/ios/get-started/installation/device-provisioning).
 
 When used in a Xamarin iOS project, the Microsoft Authentication Library has a few [requirements specific to iOS](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/Xamarin-iOS-specifics).
 
@@ -192,7 +193,7 @@ First, you need to enable Keychain access. In Solution Explorer, expand the **Gr
 
 ![A screenshot of the Keychain entitlement configuration](./images/enable-keychain-access.png)
 
-Next, you need to register the redirect URI you configured in the app registration step as a URL type that your app handles. Open the **Info.plist** file and make the following changes.
+Next, you need to register the default MSAL redirect URI as a URL type that your app handles. Open the **Info.plist** file and make the following changes.
 
 - On the **Application** tab, check that the value of **Bundle identifier** matches the value you set for **Keychain Groups** in **Entitlements.plist**. If it doesn't, update it now.
 - On the **Advanced** tab, locate the **URL Types** section. Add a URL type here with the following values:
@@ -209,7 +210,7 @@ Finally, update the code in the **GraphTutorial.iOS** project to handle the redi
 using Microsoft.Identity.Client;
 ```
 
-Add the following line to `FinishedLaunching` function just before the `return` statement.
+Add the following line to `FinishedLaunching` function just before the `LoadApplication(new App());` line.
 
 ```cs
 // Specify the Keychain access group
