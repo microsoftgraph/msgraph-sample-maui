@@ -115,7 +115,7 @@ Next, replace the entire contents of `CalendarPage.xaml` with the following.
     <ContentPage.Content>
         <StackLayout>
             <ListView x:Name="CalendarList"
-                      VerticalOptions="StartAndExpand"
+                      HasUnevenRows="true"
                       Margin="10,10,10,10">
                 <ListView.ItemTemplate>
                     <DataTemplate>
