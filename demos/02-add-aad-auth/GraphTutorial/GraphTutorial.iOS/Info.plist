@@ -25,7 +25,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>GraphTutorial</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.graphdevx.GraphTutorial</string>
+	<string>com.companyname.GraphTutorial</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>
@@ -38,10 +38,10 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>com.graphdevx.GraphTutorial</string>
+			<string>com.companyname.GraphTutorial</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>YOUR_REDIRECT_URI_HERE</string>
+				<string>msal09fc861a-e28d-4fb2-aec7-0830920da73d</string>
 			</array>
 			<key>CFBundleURLTypes</key>
 			<string>Editor</string>

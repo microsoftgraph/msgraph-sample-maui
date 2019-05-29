@@ -14,7 +14,7 @@ namespace GraphTutorial
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MenuPage : ContentPage
     {
-        MainPage RootPage { get => Application.Current.MainPage as MainPage; }
+        MainPage RootPage => Application.Current.MainPage as MainPage;
         List<NavMenuItem> menuItems;
 
         public MenuPage()
@@ -55,14 +55,7 @@ namespace GraphTutorial
 
         private async void OnSignIn(object sender, EventArgs e)
         {
-            try
-            {
-                await (Application.Current as App).SignIn();
-            }
-            catch (Microsoft.Identity.Client.MsalException ex)
-            {
-                await DisplayAlert("Sign in error", ex.Message, "OK");
-            }
+            await (Application.Current as App).SignIn();
         }
     }
 }

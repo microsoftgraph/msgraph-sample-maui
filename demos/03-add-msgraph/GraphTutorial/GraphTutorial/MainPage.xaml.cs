@@ -52,11 +52,5 @@ namespace GraphTutorial
                 IsPresented = false;
             }
         }
-
-        protected override async void OnAppearing()
-        {
-            base.OnAppearing();
-            await (Application.Current as App).SignIn();
-        }
     }
 }

@@ -4,7 +4,7 @@
 <dict>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)com.graphdevx.GraphTutorial</string>
+		<string>$(AppIdentifierPrefix)com.companyname.GraphTutorial</string>
 	</array>
 </dict>
 </plist>

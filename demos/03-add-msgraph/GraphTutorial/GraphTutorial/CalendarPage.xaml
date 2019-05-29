@@ -10,7 +10,6 @@
     <ContentPage.Content>
         <StackLayout>
             <ListView x:Name="CalendarList"
-                      VerticalOptions="StartAndExpand"
                       HasUnevenRows="true"
                       Margin="10,10,10,10">
                 <ListView.ItemTemplate>

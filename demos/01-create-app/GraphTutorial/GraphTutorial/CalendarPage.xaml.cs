@@ -9,12 +9,12 @@ using Xamarin.Forms.Xaml;
 
 namespace GraphTutorial
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class CalendarPage : ContentPage
-	{
-		public CalendarPage ()
-		{
-			InitializeComponent ();
-		}
-	}
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class CalendarPage : ContentPage
+    {
+        public CalendarPage()
+        {
+            InitializeComponent();
+        }
+    }
 }

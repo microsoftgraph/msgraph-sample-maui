@@ -1,6 +1,6 @@
 ﻿using GraphTutorial.Models;
-using Microsoft.Graph;
 using Microsoft.Identity.Client;
+using Microsoft.Graph;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -12,13 +12,12 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace GraphTutorial
 {
     public partial class App : Application, INotifyPropertyChanged
     {
         // Is a user signed in?
-        private bool isSignedIn = false;
+        private bool isSignedIn;
         public bool IsSignedIn
         {
             get { return isSignedIn; }
@@ -33,7 +32,7 @@ namespace GraphTutorial
         public bool IsSignedOut { get { return !isSignedIn; } }
 
         // The user's display name
-        private string userName = string.Empty;
+        private string userName;
         public string UserName
         {
             get { return userName; }
@@ -45,7 +44,7 @@ namespace GraphTutorial
         }
 
         // The user's email address
-        private string userEmail = string.Empty;
+        private string userEmail;
         public string UserEmail
         {
             get { return userEmail; }
@@ -57,7 +56,7 @@ namespace GraphTutorial
         }
 
         // The user's profile photo
-        private ImageSource userPhoto = null;
+        private ImageSource userPhoto;
         public ImageSource UserPhoto
         {
             get { return userPhoto; }
@@ -69,10 +68,13 @@ namespace GraphTutorial
         }
 
         // UIParent used by Android version of the app
-        public static UIParent AuthUIParent = null;
+        public static object AuthUIParent = null;
+
+        // Keychain security group used by iOS version of the app
+        public static string iOSKeychainSecurityGroup = null;
 
         // Microsoft Authentication client for native/mobile apps
-        public static PublicClientApplication PCA;
+        public static IPublicClientApplication PCA;
 
         // Microsoft Graph client
         public static GraphServiceClient GraphClient;
@@ -81,7 +83,15 @@ namespace GraphTutorial
         {
             InitializeComponent();
 
-            PCA = new PublicClientApplication(OAuthSettings.ApplicationId);
+            var builder = PublicClientApplicationBuilder
+                .Create(OAuthSettings.ApplicationId);
+
+            if (!string.IsNullOrEmpty(iOSKeychainSecurityGroup))
+            {
+                builder = builder.WithIosKeychainSecurityGroup(iOSKeychainSecurityGroup);
+            }
+
+            PCA = builder.Build();
 
             MainPage = new MainPage();
         }
@@ -108,20 +118,39 @@ namespace GraphTutorial
             // First, attempt silent sign in
             // If the user's information is already in the app's cache,
             // they won't have to sign in again.
+            string accessToken = string.Empty;
             try
             {
                 var accounts = await PCA.GetAccountsAsync();
-                var silentAuthResult = await PCA.AcquireTokenSilentAsync(
-                    scopes, accounts.FirstOrDefault());
+                if (accounts.Count() > 0)
+                {
+                    var silentAuthResult = await PCA
+                        .AcquireTokenSilent(scopes, accounts.FirstOrDefault())
+                        .ExecuteAsync();
 
-                Debug.WriteLine("User already signed in.");
-                Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
+                    Debug.WriteLine("User already signed in.");
+                    Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
+                    accessToken = silentAuthResult.AccessToken;
+                }
             }
             catch (MsalUiRequiredException)
             {
                 // This exception is thrown when an interactive sign-in is required.
+                Debug.WriteLine("Silent token request failed, user needs to sign-in");
+            }
+
+            if (string.IsNullOrEmpty(accessToken))
+            {
                 // Prompt the user to sign-in
-                var authResult = await PCA.AcquireTokenAsync(scopes, AuthUIParent);
+                var interactiveRequest = PCA.AcquireTokenInteractive(scopes);
+
+                if (AuthUIParent != null)
+                {
+                    interactiveRequest = interactiveRequest
+                        .WithParentActivityOrWindow(AuthUIParent);
+                }
+
+                var authResult = await interactiveRequest.ExecuteAsync();
                 Debug.WriteLine($"Access Token: {authResult.AccessToken}");
             }
 
@@ -131,7 +160,8 @@ namespace GraphTutorial
                 {
                     var accounts = await PCA.GetAccountsAsync();
 
-                    var result = await PCA.AcquireTokenSilentAsync(scopes, accounts.FirstOrDefault());
+                    var result = await PCA.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
+                        .ExecuteAsync();
 
                     requestMessage.Headers.Authorization =
                         new AuthenticationHeaderValue("Bearer", result.AccessToken);
@@ -154,7 +184,6 @@ namespace GraphTutorial
                 accounts = await PCA.GetAccountsAsync();
             }
 
-            // Clear user information
             UserPhoto = null;
             UserName = string.Empty;
             UserEmail = string.Empty;

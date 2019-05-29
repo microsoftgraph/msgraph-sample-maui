@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Microsoft.Graph;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -13,9 +16,9 @@ namespace GraphTutorial
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CalendarPage : ContentPage
     {
-        public CalendarPage ()
+        public CalendarPage()
         {
-            InitializeComponent ();
+            InitializeComponent();
         }
 
         protected override async void OnAppearing()

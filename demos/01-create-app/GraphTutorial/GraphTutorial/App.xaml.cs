@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace GraphTutorial
 {
     public partial class App : Application, INotifyPropertyChanged
     {
         // Is a user signed in?
-        private bool isSignedIn = false;
+        private bool isSignedIn;
         public bool IsSignedIn
         {
             get { return isSignedIn; }
@@ -27,7 +26,7 @@ namespace GraphTutorial
         public bool IsSignedOut { get { return !isSignedIn; } }
 
         // The user's display name
-        private string userName = string.Empty;
+        private string userName;
         public string UserName
         {
             get { return userName; }
@@ -39,7 +38,7 @@ namespace GraphTutorial
         }
 
         // The user's email address
-        private string userEmail = string.Empty;
+        private string userEmail;
         public string UserEmail
         {
             get { return userEmail; }
@@ -51,7 +50,7 @@ namespace GraphTutorial
         }
 
         // The user's profile photo
-        private ImageSource userPhoto = null;
+        private ImageSource userPhoto;
         public ImageSource UserPhoto
         {
             get { return userPhoto; }
