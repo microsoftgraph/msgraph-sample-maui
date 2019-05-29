@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Microsoft.Graph;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +19,20 @@ namespace GraphTutorial
         public CalendarPage()
         {
             InitializeComponent();
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
+            // Get the events
+            var events = await App.GraphClient.Me.Events.Request()
+                .Select("subject,organizer,start,end")
+                .OrderBy("createdDateTime DESC")
+                .GetAsync();
+
+            // Temporary
+            JSONResponse.Text = JsonConvert.SerializeObject(events.CurrentPage, Formatting.Indented);
         }
     }
 }
