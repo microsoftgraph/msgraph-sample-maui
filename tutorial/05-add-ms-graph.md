@@ -60,7 +60,7 @@ You can now run the app, sign in, and click the **Calendar** navigation item in 
 
 ## Display the results
 
-Now you can replace the JSON dump with something to display the results in a user-friendly manner. Start by creating a [binding value converter](/xamarin/xamarin-forms/xaml/xaml-basics/data-binding-basics#binding-value-converters) to convert the [dateTimeTimeZone](/graph/api/resources/datetimetimezone?view=graph-rest-1.0) values returned by Microsoft Graph into the date and time formats the user expects. Right-click the **Models** folder in the **GraphTutorial** project and choose **Add**, then **Class...**. Name the class `GraphDateTimeTimeZoneConverter` and choose **Add**. Replace the entire contents of the file with the following.
+Now you can replace the JSON dump with something to display the results in a user-friendly manner. Start by creating a [binding value converter](/xamarin/xamarin-forms/xaml/xaml-basics/data-binding-basics#binding-value-converters) to convert the [dateTimeTimeZone](/graph/api/resources/datetimetimezone?view=graph-rest-1.0) values returned by Microsoft Graph into the date and time formats the user expects. Right-click the **Models** folder in the **GraphTutorial** project and select **Add**, then **Class...**. Name the class `GraphDateTimeTimeZoneConverter` and select **Add**. Replace the entire contents of the file with the following.
 
 ```cs
 using Microsoft.Graph;

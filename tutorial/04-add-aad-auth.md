@@ -2,7 +2,7 @@
 
 In this exercise you will extend the application from the previous exercise to support authentication with Azure AD. This is required to obtain the necessary OAuth access token to call the Microsoft Graph. In this step you will integrate the [Microsoft Authentication Library for .NET (MSAL)](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet) into the application.
 
-In **Solution Explorer**, expand the **GraphTutorial** project and right-click the **Models** folder. Choose **Add > Class...**. Name the class `OAuthSettings` and choose **Add**. Open the **OAuthSettings.cs** file and replace its contents with the following.
+In **Solution Explorer**, expand the **GraphTutorial** project and right-click the **Models** folder. Select **Add > Class...**. Name the class `OAuthSettings` and select **Add**. Open the **OAuthSettings.cs** file and replace its contents with the following.
 
 ```cs
 namespace GraphTutorial.Models

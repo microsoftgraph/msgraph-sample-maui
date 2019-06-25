@@ -1,10 +1,10 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-Open Visual Studio, and select **Create a new project**. In the **Create a new project** dialog, choose **Mobile App (Xamarin.Forms)**, then choose **Next**.
+Open Visual Studio, and select **Create a new project**. In the **Create a new project** dialog, choose **Mobile App (Xamarin.Forms)**, then select **Next**.
 
 ![Visual Studio 2019 create new project dialog](images/new-project-dialog.png)
 
-In the **Configure a new project** dialog, enter `GraphTutorial` for the **Project name** and **Solution name**, then choose **Create**.
+In the **Configure a new project** dialog, enter `GraphTutorial` for the **Project name** and **Solution name**, then select **Create**.
 
 > [!IMPORTANT]
 > Ensure that you enter the exact same name for the Visual Studio Project that is specified in these lab instructions. The Visual Studio Project name becomes part of the namespace in the code. The code inside these instructions depends on the namespace matching the Visual Studio Project name specified in these instructions. If you use a different project name the code will not compile unless you adjust all the namespaces to match the Visual Studio Project name you enter when you create the project.
@@ -133,7 +133,7 @@ private Stream GetUserPhoto()
 }
 ```
 
-The `GetUserPhoto` function returns a default photo for now. You can either supply your own file here, or you can download the one used in the sample from [GitHub](https://github.com/microsoftgraph/msgraph-training-xamarin/blob/master/tutorial/images/no-profile-pic.png). Copy the file to the `./GraphTutorial/GraphTutorial` directory. Right-click the **GraphTutorial** project in **Solution Explorer** and choose **Add**, then **Existing Item...**. Select the `no-profile-pic.png` file and choose **Add**. Now right-click the file in **Solution Explorer** and choose **Properties**. In the **Properties** window, change the value of **Build Action** to **Embedded resource**.
+The `GetUserPhoto` function returns a default photo for now. You can either supply your own file here, or you can download the one used in the sample from [GitHub](https://github.com/microsoftgraph/msgraph-training-xamarin/blob/master/tutorial/images/no-profile-pic.png). Copy the file to the `./GraphTutorial/GraphTutorial` directory. Right-click the **GraphTutorial** project in **Solution Explorer** and select **Add**, then **Existing Item...**. Select the `no-profile-pic.png` file and select **Add**. Now right-click the file in **Solution Explorer** and select **Properties**. In the **Properties** window, change the value of **Build Action** to **Embedded resource**.
 
 ![A screenshot of the Properties window for the PNG file](./images/png-file-properties.png)
 
@@ -167,9 +167,9 @@ Open the **MainPage.xaml** file in the **GraphTutorial** project and replace its
 
 #### Implement the menu
 
-Start by creating a model to represent the menu items. Right-click the **GraphTutorial** project and choose **Add**, then **New Folder**. Name the folder `Models`.
+Start by creating a model to represent the menu items. Right-click the **GraphTutorial** project and select **Add**, then **New Folder**. Name the folder `Models`.
 
-Right-click the **Models** folder and choose **Add**, then **Class...**. Name the class `NavMenuItem` and choose **Add**. Open the **NavMenuItem.cs** file and replace its contents with the following.
+Right-click the **Models** folder and select **Add**, then **Class...**. Name the class `NavMenuItem` and select **Add**. Open the **NavMenuItem.cs** file and replace its contents with the following.
 
 ```cs
 namespace GraphTutorial.Models
@@ -189,7 +189,7 @@ namespace GraphTutorial.Models
 }
 ```
 
-Now add the menu page. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `MenuPage`. Choose **Add**. Open the **MenuPage.xaml** file and replace its contents with the following.
+Now add the menu page. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `MenuPage`. Select **Add**. Open the **MenuPage.xaml** file and replace its contents with the following.
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
@@ -326,7 +326,7 @@ namespace GraphTutorial
 
 #### Implement the welcome page
 
-Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `WelcomePage`. Choose **Add**. Open the **WelcomePage.xaml** file and replace its contents with the following.
+Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `WelcomePage`. Select **Add**. Open the **WelcomePage.xaml** file and replace its contents with the following.
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
@@ -380,7 +380,7 @@ private void OnSignIn(object sender, EventArgs e)
 
 #### Add calendar page
 
-Now add a calendar page. This will just be a placeholder for now. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `CalendarPage`. Choose **Add**.
+Now add a calendar page. This will just be a placeholder for now. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `CalendarPage`. Select **Add**.
 
 Leave the added page as-is for now.
 
@@ -447,6 +447,6 @@ namespace GraphTutorial
 }
 ```
 
-Save all of your changes. Right-click the project that you want to run (Android, iOS, or UWP) and choose **Set as StartUp Project**. Press **F5** or select **Debug > Start Debugging** in Visual Studio.
+Save all of your changes. Right-click the project that you want to run (Android, iOS, or UWP) and select **Set as StartUp Project**. Press **F5** or select **Debug > Start Debugging** in Visual Studio.
 
 ![Screenshots of the Android, iOS, and UWP versions of the application](./images/welcome-page.png)
