@@ -41,6 +41,8 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
     1. Replace `YOUR_REDIRECT_URI_HERE` with the redirect URI that begins with `msal` you got from the Azure portal.
 1. In the **GraphTutorial.iOS** project, open the `Info.plist` file.
     1. On the **Advanced** tab, locate the **URL Types** section. Change the **URL Schemes** entry from `YOUR_REDIRECT_URI_HERE` to the redirect URI from your app registration that begins with `msal`.
+1. In the **GraphTutorial.Android** project, expand the **Properties** folder. Right-click the **AndroidManifest.xml** file and select **Open With**, then **Source Code Editor**.
+    1. Replace `YOUR_APP_ID_HERE` with the **Application Id** you got from the Azure portal.
 
 ## Run the sample
 
