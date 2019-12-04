@@ -292,21 +292,6 @@ Add the following to the end of the `SignIn` function.
 await InitializeGraphClientAsync();
 ```
 
-```cs
-// Initialize Graph client
-GraphClient = new GraphServiceClient(new DelegateAuthenticationProvider(
-    async (requestMessage) =>
-    {
-        var accounts = await PCA.GetAccountsAsync();
-
-        var result = await PCA.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
-            .ExecuteAsync();
-
-        requestMessage.Headers.Authorization =
-            new AuthenticationHeaderValue("Bearer", result.AccessToken);
-    }));
-```
-
 Now update the `GetUserInfo` function to get the user's details from the Microsoft Graph. Replace the existing `GetUserInfo` function with the following.
 
 ```cs
