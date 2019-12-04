@@ -14,7 +14,7 @@ using Xamarin.Forms.Xaml;
 
 namespace GraphTutorial
 {
-    public partial class App : Application, INotifyPropertyChanged
+    public partial class App : Xamarin.Forms.Application, INotifyPropertyChanged
     {
         // Is a user signed in?
         private bool isSignedIn;
