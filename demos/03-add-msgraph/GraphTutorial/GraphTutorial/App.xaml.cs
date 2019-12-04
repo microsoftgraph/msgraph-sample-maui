@@ -79,6 +79,8 @@ namespace GraphTutorial
         // Microsoft Graph client
         public static GraphServiceClient GraphClient;
 
+        private readonly string[] Scopes = OAuthSettings.Scopes.Split(' ');
+
         public App()
         {
             InitializeComponent();
@@ -112,37 +114,27 @@ namespace GraphTutorial
         }
 
         public async Task SignIn()
-        {
-            var scopes = OAuthSettings.Scopes.Split(' ');
-
+        {   
             // First, attempt silent sign in
             // If the user's information is already in the app's cache,
             // they won't have to sign in again.
-            string accessToken = string.Empty;
             try
             {
                 var accounts = await PCA.GetAccountsAsync();
-                if (accounts.Count() > 0)
-                {
-                    var silentAuthResult = await PCA
-                        .AcquireTokenSilent(scopes, accounts.FirstOrDefault())
-                        .ExecuteAsync();
 
-                    Debug.WriteLine("User already signed in.");
-                    Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
-                    accessToken = silentAuthResult.AccessToken;
-                }
+                var silentAuthResult = await PCA
+                    .AcquireTokenSilent(Scopes, accounts.FirstOrDefault())
+                    .ExecuteAsync();
+
+                Debug.WriteLine("User already signed in.");
+                Debug.WriteLine($"Successful silent authentication for: {silentAuthResult.Account.Username}");
             }
-            catch (MsalUiRequiredException)
+            catch (MsalUiRequiredException ex)
             {
                 // This exception is thrown when an interactive sign-in is required.
-                Debug.WriteLine("Silent token request failed, user needs to sign-in");
-            }
-
-            if (string.IsNullOrEmpty(accessToken))
-            {
+                Debug.WriteLine("Silent token request failed, user needs to sign-in: " + ex.Message);
                 // Prompt the user to sign-in
-                var interactiveRequest = PCA.AcquireTokenInteractive(scopes);
+                var interactiveRequest = PCA.AcquireTokenInteractive(Scopes);
 
                 if (AuthUIParent != null)
                 {
@@ -150,26 +142,50 @@ namespace GraphTutorial
                         .WithParentActivityOrWindow(AuthUIParent);
                 }
 
-                var authResult = await interactiveRequest.ExecuteAsync();
-                Debug.WriteLine($"Access Token: {authResult.AccessToken}");
+                var intertactiveAuthResult = await interactiveRequest.ExecuteAsync();
+                Debug.WriteLine($"Successful interactive authentication for: {intertactiveAuthResult.Account.Username}");
+            }
+            catch (Exception exe)
+            {
+                Debug.WriteLine("Authentiation failed. See exception messsage for more details: " + exe.Message);
             }
 
-            // Initialize Graph client
-            GraphClient = new GraphServiceClient(new DelegateAuthenticationProvider(
-                async (requestMessage) =>
+            await InitializeGraphClientAsync().ConfigureAwait(false);
+        }
+
+        private async Task InitializeGraphClientAsync()
+        {
+            var currentAccounts = await PCA.GetAccountsAsync();
+            try
+            {
+                if (currentAccounts.Count() > 0)
                 {
-                    var accounts = await PCA.GetAccountsAsync();
+                    // Initialize Graph client
+                    GraphClient = new GraphServiceClient(new DelegateAuthenticationProvider(
+                        async (requestMessage) =>
+                        {
+                            var result = await PCA.AcquireTokenSilent(Scopes, currentAccounts.FirstOrDefault())
+                                .ExecuteAsync();
 
-                    var result = await PCA.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
-                        .ExecuteAsync();
+                            requestMessage.Headers.Authorization =
+                                new AuthenticationHeaderValue("Bearer", result.AccessToken);
+                        }));
 
-                    requestMessage.Headers.Authorization =
-                        new AuthenticationHeaderValue("Bearer", result.AccessToken);
-                }));
+                    await GetUserInfo();
 
-            await GetUserInfo();
-
-            IsSignedIn = true;
+                    IsSignedIn = true;
+                }
+                else
+                {
+                    IsSignedIn = false;
+                }
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(string.Format("Failed to initialized graph client. Accounts in the msal cache: {0}. See exception message for details: {1}", 
+                    currentAccounts.Count(), 
+                    ex.Message));
+            }            
         }
 
         public async Task SignOut()
