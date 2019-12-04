@@ -33,6 +33,12 @@ using System.Linq;
 using System.Net.Http.Headers;
 ```
 
+Change the **App** class declaration line to resolve the name conflict for **Application**.
+
+```cs
+public partial class App : Xamarin.Forms.Application, INotifyPropertyChanged
+```
+
 Add the following properties to the `App` class.
 
 ```cs
