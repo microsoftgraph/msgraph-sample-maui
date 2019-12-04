@@ -33,6 +33,12 @@ using System.Linq;
 using System.Net.Http.Headers;
 ```
 
+Change the **App** class declaration line to resolve the name conflict for **Application**.
+
+```cs
+public partial class App : Xamarin.Forms.Application, INotifyPropertyChanged
+```
+
 Add the following properties to the `App` class.
 
 ```cs
@@ -47,6 +53,9 @@ public static IPublicClientApplication PCA;
 
 // Microsoft Graph client
 public static GraphServiceClient GraphClient;
+
+// Microsoft Graph permissions used by app
+private readonly string[] Scopes = OAuthSettings.Scopes.Split(' ');
 ```
 
 Next, create a new `PublicClientApplication` in the constructor of the `App` class.
@@ -73,36 +82,27 @@ public App()
 Now update the `SignIn` function to use the `PublicClientApplication` to get an access token. Add the following code above the `await GetUserInfo();` line.
 
 ```cs
-var scopes = OAuthSettings.Scopes.Split(' ');
-
 // First, attempt silent sign in
 // If the user's information is already in the app's cache,
 // they won't have to sign in again.
-string accessToken = string.Empty;
 try
 {
     var accounts = await PCA.GetAccountsAsync();
-    if (accounts.Count() > 0)
-    {
-        var silentAuthResult = await PCA
-            .AcquireTokenSilent(scopes, accounts.FirstOrDefault())
-            .ExecuteAsync();
 
-        Debug.WriteLine("User already signed in.");
-        Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
-        accessToken = silentAuthResult.AccessToken;
-    }
+    var silentAuthResult = await PCA
+        .AcquireTokenSilent(Scopes, accounts.FirstOrDefault())
+        .ExecuteAsync();
+
+    Debug.WriteLine("User already signed in.");
+    Debug.WriteLine($"Successful silent authentication for: {silentAuthResult.Account.Username}");
+    Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
 }
-catch (MsalUiRequiredException)
+catch (MsalUiRequiredException msalEx)
 {
     // This exception is thrown when an interactive sign-in is required.
-    Debug.WriteLine("Silent token request failed, user needs to sign-in");
-}
-
-if (string.IsNullOrEmpty(accessToken))
-{
+    Debug.WriteLine("Silent token request failed, user needs to sign-in: " + msalEx.Message);
     // Prompt the user to sign-in
-    var interactiveRequest = PCA.AcquireTokenInteractive(scopes);
+    var interactiveRequest = PCA.AcquireTokenInteractive(Scopes);
 
     if (AuthUIParent != null)
     {
@@ -110,8 +110,13 @@ if (string.IsNullOrEmpty(accessToken))
             .WithParentActivityOrWindow(AuthUIParent);
     }
 
-    var authResult = await interactiveRequest.ExecuteAsync();
-    Debug.WriteLine($"Access Token: {authResult.AccessToken}");
+    var interactiveAuthResult = await interactiveRequest.ExecuteAsync();
+    Debug.WriteLine($"Successful interactive authentication for: {interactiveAuthResult.Account.Username}");
+    Debug.WriteLine($"Access token: {interactiveAuthResult.AccessToken}");
+}
+catch (Exception ex)
+{
+    Debug.WriteLine("Authentication failed. See exception messsage for more details: " + ex.Message);
 }
 ```
 
@@ -241,21 +246,56 @@ At this point if you run the application and tap the **Sign in** button, you are
 
 ## Get user details
 
-Now update the `SignIn` function in **App.xaml.cs** to initialize the `GraphServiceClient`. Add the following code before the `await GetUserInfo();` line.
+Add a new function to the **App** class to initialize the `GraphServiceClient`.
 
 ```cs
-// Initialize Graph client
-GraphClient = new GraphServiceClient(new DelegateAuthenticationProvider(
-    async (requestMessage) =>
+private async Task InitializeGraphClientAsync()
+{
+    var currentAccounts = await PCA.GetAccountsAsync();
+    try
     {
-        var accounts = await PCA.GetAccountsAsync();
+        if (currentAccounts.Count() > 0)
+        {
+            // Initialize Graph client
+            GraphClient = new GraphServiceClient(new DelegateAuthenticationProvider(
+                async (requestMessage) =>
+                {
+                    var result = await PCA.AcquireTokenSilent(Scopes, currentAccounts.FirstOrDefault())
+                        .ExecuteAsync();
 
-        var result = await PCA.AcquireTokenSilent(scopes, accounts.FirstOrDefault())
-            .ExecuteAsync();
+                    requestMessage.Headers.Authorization =
+                        new AuthenticationHeaderValue("Bearer", result.AccessToken);
+                }));
 
-        requestMessage.Headers.Authorization =
-            new AuthenticationHeaderValue("Bearer", result.AccessToken);
-    }));
+            await GetUserInfo();
+
+            IsSignedIn = true;
+        }
+        else
+        {
+            IsSignedIn = false;
+        }
+    }
+    catch(Exception ex)
+    {
+        Debug.WriteLine(
+            $"Failed to initialized graph client. Accounts in the msal cache: {currentAccounts.Count()}. See exception message for details: {ex.Message}");
+    }
+}
+```
+
+Now update the `SignIn` function in **App.xaml.cs** to call this function instead of `GetUserInfo`. Remove the following from the `SignIn` function.
+
+```cs
+await GetUserInfo();
+
+IsSignedIn = true;
+```
+
+Add the following to the end of the `SignIn` function.
+
+```cs
+await InitializeGraphClientAsync();
 ```
 
 Now update the `GetUserInfo` function to get the user's details from the Microsoft Graph. Replace the existing `GetUserInfo` function with the following.

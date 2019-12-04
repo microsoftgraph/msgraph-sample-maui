@@ -14,7 +14,7 @@ using Xamarin.Forms.Xaml;
 
 namespace GraphTutorial
 {
-    public partial class App : Application, INotifyPropertyChanged
+    public partial class App : Xamarin.Forms.Application, INotifyPropertyChanged
     {
         // Is a user signed in?
         private bool isSignedIn;
@@ -79,6 +79,7 @@ namespace GraphTutorial
         // Microsoft Graph client
         public static GraphServiceClient GraphClient;
 
+        // Microsoft Graph permissions used by app
         private readonly string[] Scopes = OAuthSettings.Scopes.Split(' ');
 
         public App()
@@ -128,11 +129,12 @@ namespace GraphTutorial
 
                 Debug.WriteLine("User already signed in.");
                 Debug.WriteLine($"Successful silent authentication for: {silentAuthResult.Account.Username}");
+                Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
             }
-            catch (MsalUiRequiredException ex)
+            catch (MsalUiRequiredException msalEx)
             {
                 // This exception is thrown when an interactive sign-in is required.
-                Debug.WriteLine("Silent token request failed, user needs to sign-in: " + ex.Message);
+                Debug.WriteLine("Silent token request failed, user needs to sign-in: " + msalEx.Message);
                 // Prompt the user to sign-in
                 var interactiveRequest = PCA.AcquireTokenInteractive(Scopes);
 
@@ -142,15 +144,16 @@ namespace GraphTutorial
                         .WithParentActivityOrWindow(AuthUIParent);
                 }
 
-                var intertactiveAuthResult = await interactiveRequest.ExecuteAsync();
-                Debug.WriteLine($"Successful interactive authentication for: {intertactiveAuthResult.Account.Username}");
+                var interactiveAuthResult = await interactiveRequest.ExecuteAsync();
+                Debug.WriteLine($"Successful interactive authentication for: {interactiveAuthResult.Account.Username}");
+                Debug.WriteLine($"Access token: {interactiveAuthResult.AccessToken}");
             }
-            catch (Exception exe)
+            catch (Exception ex)
             {
-                Debug.WriteLine("Authentiation failed. See exception messsage for more details: " + exe.Message);
+                Debug.WriteLine("Authentication failed. See exception messsage for more details: " + ex.Message);
             }
 
-            await InitializeGraphClientAsync().ConfigureAwait(false);
+            await InitializeGraphClientAsync();
         }
 
         private async Task InitializeGraphClientAsync()
@@ -182,10 +185,9 @@ namespace GraphTutorial
             }
             catch(Exception ex)
             {
-                Debug.WriteLine(string.Format("Failed to initialized graph client. Accounts in the msal cache: {0}. See exception message for details: {1}", 
-                    currentAccounts.Count(), 
-                    ex.Message));
-            }            
+                Debug.WriteLine(
+                    $"Failed to initialized graph client. Accounts in the msal cache: {currentAccounts.Count()}. See exception message for details: {ex.Message}");
+            }
         }
 
         public async Task SignOut()
