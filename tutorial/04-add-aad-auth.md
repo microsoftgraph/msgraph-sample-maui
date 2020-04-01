@@ -119,70 +119,26 @@ At this point if you run the application and tap the **Sign in** button, you are
 
 ## Get user details
 
-Add a new function to the **App** class to initialize the `GraphServiceClient`.
+1. Add a new function to the **App** class to initialize the `GraphServiceClient`.
 
-```cs
-private async Task InitializeGraphClientAsync()
-{
-    var currentAccounts = await PCA.GetAccountsAsync();
-    try
-    {
-        if (currentAccounts.Count() > 0)
-        {
-            // Initialize Graph client
-            GraphClient = new GraphServiceClient(new DelegateAuthenticationProvider(
-                async (requestMessage) =>
-                {
-                    var result = await PCA.AcquireTokenSilent(Scopes, currentAccounts.FirstOrDefault())
-                        .ExecuteAsync();
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/App.xaml.cs" id="InitializeGraphClientSnippet":::
 
-                    requestMessage.Headers.Authorization =
-                        new AuthenticationHeaderValue("Bearer", result.AccessToken);
-                }));
+1. Update the `SignIn` function in **App.xaml.cs** to call this function instead of `GetUserInfo`. Remove the following from the `SignIn` function.
 
-            await GetUserInfo();
+    ```csharp
+    await GetUserInfo();
 
-            IsSignedIn = true;
-        }
-        else
-        {
-            IsSignedIn = false;
-        }
-    }
-    catch(Exception ex)
-    {
-        Debug.WriteLine(
-            $"Failed to initialized graph client. Accounts in the msal cache: {currentAccounts.Count()}. See exception message for details: {ex.Message}");
-    }
-}
-```
+    IsSignedIn = true;
+    ```
 
-Now update the `SignIn` function in **App.xaml.cs** to call this function instead of `GetUserInfo`. Remove the following from the `SignIn` function.
+1. Add the following to the end of the `SignIn` function.
 
-```cs
-await GetUserInfo();
+    ```csharp
+    await InitializeGraphClientAsync();
+    ```
 
-IsSignedIn = true;
-```
+1. Update the `GetUserInfo` function to get the user's details from the Microsoft Graph. Replace the existing `GetUserInfo` function with the following.
 
-Add the following to the end of the `SignIn` function.
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/App.xaml.cs" id="GetUserInfoSnippet":::
 
-```cs
-await InitializeGraphClientAsync();
-```
-
-Now update the `GetUserInfo` function to get the user's details from the Microsoft Graph. Replace the existing `GetUserInfo` function with the following.
-
-```cs
-private async Task GetUserInfo()
-{
-    // Get the logged on user's profile (/me)
-    var user = await GraphClient.Me.Request().GetAsync();
-
-    UserPhoto = ImageSource.FromStream(() => GetUserPhoto());
-    UserName = user.DisplayName;
-    UserEmail = string.IsNullOrEmpty(user.Mail) ? user.UserPrincipalName : user.Mail;
-}
-```
-
-If you save your changes and run the app now, after sign-in the UI is updated with the user's display name and email address.
+1. Save your changes and run the app. After sign-in the UI is updated with the user's display name and email address.

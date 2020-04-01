@@ -150,9 +150,7 @@ namespace GraphTutorial
             }
             // </GetTokenSnippet>
 
-            await GetUserInfo();
-
-            IsSignedIn = true;
+            await InitializeGraphClientAsync();
         }
 
         public async Task SignOut()
@@ -175,12 +173,53 @@ namespace GraphTutorial
             IsSignedIn = false;
         }
 
+        // <InitializeGraphClientSnippet>
+        private async Task InitializeGraphClientAsync()
+        {
+            var currentAccounts = await PCA.GetAccountsAsync();
+            try
+            {
+                if (currentAccounts.Count() > 0)
+                {
+                    // Initialize Graph client
+                    GraphClient = new GraphServiceClient(new DelegateAuthenticationProvider(
+                        async (requestMessage) =>
+                        {
+                            var result = await PCA.AcquireTokenSilent(Scopes, currentAccounts.FirstOrDefault())
+                                .ExecuteAsync();
+
+                            requestMessage.Headers.Authorization =
+                                new AuthenticationHeaderValue("Bearer", result.AccessToken);
+                        }));
+
+                    await GetUserInfo();
+
+                    IsSignedIn = true;
+                }
+                else
+                {
+                    IsSignedIn = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(
+                    $"Failed to initialized graph client. Accounts in the msal cache: {currentAccounts.Count()}. See exception message for details: {ex.Message}");
+            }
+        }
+        // </InitializeGraphClientSnippet>
+
+        // <GetUserInfoSnippet>
         private async Task GetUserInfo()
         {
+            // Get the logged on user's profile (/me)
+            var user = await GraphClient.Me.Request().GetAsync();
+
             UserPhoto = ImageSource.FromStream(() => GetUserPhoto());
-            UserName = "Adele Vance";
-            UserEmail = "adelev@contoso.com";
+            UserName = user.DisplayName;
+            UserEmail = string.IsNullOrEmpty(user.Mail) ? user.UserPrincipalName : user.Mail;
         }
+        // </GetUserInfoSnippet>
 
         private Stream GetUserPhoto()
         {
