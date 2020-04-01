@@ -1,452 +1,158 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-Open Visual Studio, and select **Create a new project**. In the **Create a new project** dialog, choose **Mobile App (Xamarin.Forms)**, then select **Next**.
+1. Open Visual Studio, and select **Create a new project**.
 
-![Visual Studio 2019 create new project dialog](images/new-project-dialog.png)
+1. In the **Create a new project** dialog, choose **Mobile App (Xamarin.Forms)**, then select **Next**.
 
-In the **Configure a new project** dialog, enter `GraphTutorial` for the **Project name** and **Solution name**, then select **Create**.
+    ![Visual Studio 2019 create new project dialog](images/new-project-dialog.png)
 
-> [!IMPORTANT]
-> Ensure that you enter the exact same name for the Visual Studio Project that is specified in these lab instructions. The Visual Studio Project name becomes part of the namespace in the code. The code inside these instructions depends on the namespace matching the Visual Studio Project name specified in these instructions. If you use a different project name the code will not compile unless you adjust all the namespaces to match the Visual Studio Project name you enter when you create the project.
+1. In the **Configure a new project** dialog, enter `GraphTutorial` for the **Project name** and **Solution name**, then select **Create**.
 
-![Visual Studio 2019 configure new project dialog](images/configure-new-project-dialog.png)
+    > [!IMPORTANT]
+    > Ensure that you enter the exact same name for the Visual Studio Project that is specified in these lab instructions. The Visual Studio Project name becomes part of the namespace in the code. The code inside these instructions depends on the namespace matching the Visual Studio Project name specified in these instructions. If you use a different project name the code will not compile unless you adjust all the namespaces to match the Visual Studio Project name you enter when you create the project.
 
-In the **New Cross Platform App** dialog, select the **Blank** template, and select the platforms you want to build under **Platforms**. Select **OK** to create the solution.
+    ![Visual Studio 2019 configure new project dialog](images/configure-new-project-dialog.png)
 
-![Visual Studio 2019 new cross platform app dialog](images/new-cross-platform-app-dialog.png)
+1. In the **New Cross Platform App** dialog, select the **Blank** template, and select the platforms you want to build under **Platforms**. Select **OK** to create the solution.
+
+    ![Visual Studio 2019 new cross platform app dialog](images/new-cross-platform-app-dialog.png)
+
+## Install packages
 
 Before moving on, install some additional NuGet packages that you will use later.
 
 - [Microsoft.Identity.Client](https://www.nuget.org/packages/Microsoft.Identity.Client/) to handle Azure AD authentication and token management.
 - [Microsoft.Graph](https://www.nuget.org/packages/Microsoft.Graph/) for making calls to the Microsoft Graph.
 
-Select **Tools > NuGet Package Manager > Package Manager Console**. In the Package Manager Console, enter the following commands.
+1. Select **Tools > NuGet Package Manager > Package Manager Console**.
 
-```Powershell
-Install-Package Microsoft.Identity.Client -Version 4.7.1 -Project GraphTutorial
-Install-Package Microsoft.Identity.Client -Version 4.7.1 -Project GraphTutorial.Android
-Install-Package Microsoft.Identity.Client -Version 4.7.1 -Project GraphTutorial.iOS
-Install-Package Microsoft.Graph -Version 1.20.0 -Project GraphTutorial
-```
+1. In the Package Manager Console, enter the following commands.
+
+    ```Powershell
+    Install-Package Microsoft.Identity.Client -Version 4.10.0 -Project GraphTutorial
+    Install-Package Microsoft.Identity.Client -Version 4.10.0 -Project GraphTutorial.Android
+    Install-Package Microsoft.Identity.Client -Version 4.10.0 -Project GraphTutorial.iOS
+    Install-Package Microsoft.Graph -Version 3.0.1 -Project GraphTutorial
+    ```
 
 ## Design the app
 
-Start by updating the `App` class to add variables to track the authentication state and the signed-in user. In **Solution Explorer**, expand the **GraphTutorial** project, then expand the **App.xaml** file. Open the **App.xaml.cs** file and add the following `using` statements to the top of the file.
+Start by updating the `App` class to add variables to track the authentication state and the signed-in user.
 
-```cs
-using System.ComponentModel;
-using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
-```
+1. In **Solution Explorer**, expand the **GraphTutorial** project, then expand the **App.xaml** file. Open the **App.xaml.cs** file and add the following `using` statements to the top of the file.
 
-Next, add the `INotifyPropertyChanged` interface to the class declaration.
+    ```csharp
+    using System.ComponentModel;
+    using System.IO;
+    using System.Reflection;
+    using System.Threading.Tasks;
+    ```
 
-```cs
-public partial class App : Application, INotifyPropertyChanged
-```
+1. Add the `INotifyPropertyChanged` interface to the class declaration.
 
-Now add the following properties to the `App` class.
+    ```csharp
+    public partial class App : Application, INotifyPropertyChanged
+    ```
 
-```cs
-// Is a user signed in?
-private bool isSignedIn;
-public bool IsSignedIn
-{
-    get { return isSignedIn; }
-    set
+1. Add the following properties to the `App` class.
+
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/GraphTutorial/App.xaml.cs" id="GlobalPropertiesSnippet":::
+
+1. Add the following functions to the `App` class. The `SignIn`, `SignOut`, and `GetUserInfo` functions are just placeholders for now.
+
+    ```csharp
+    public async Task SignIn()
     {
-        isSignedIn = value;
-        OnPropertyChanged("IsSignedIn");
-        OnPropertyChanged("IsSignedOut");
+        await GetUserInfo();
+
+        IsSignedIn = true;
     }
-}
 
-public bool IsSignedOut { get { return !isSignedIn; } }
-
-// The user's display name
-private string userName;
-public string UserName
-{
-    get { return userName; }
-    set
+    public async Task SignOut()
     {
-        userName = value;
-        OnPropertyChanged("UserName");
+        UserPhoto = null;
+        UserName = string.Empty;
+        UserEmail = string.Empty;
+        IsSignedIn = false;
     }
-}
 
-// The user's email address
-private string userEmail;
-public string UserEmail
-{
-    get { return userEmail; }
-    set
+    private async Task GetUserInfo()
     {
-        userEmail = value;
-        OnPropertyChanged("UserEmail");
+        UserPhoto = ImageSource.FromStream(() => GetUserPhoto());
+        UserName = "Adele Vance";
+        UserEmail = "adelev@contoso.com";
     }
-}
 
-// The user's profile photo
-private ImageSource userPhoto;
-public ImageSource UserPhoto
-{
-    get { return userPhoto; }
-    set
+    private Stream GetUserPhoto()
     {
-        userPhoto = value;
-        OnPropertyChanged("UserPhoto");
+        // Return the default photo
+        return Assembly.GetExecutingAssembly().GetManifestResourceStream("GraphTutorial.no-profile-pic.png");
     }
-}
-```
+    ```
 
-Now add the following functions to the `App` class. The `SignIn`, `SignOut`, and `GetUserInfo` functions are just placeholders for now.
+1. The `GetUserPhoto` function returns a default photo for now. You can either supply your own file, or you can download the one used in the sample from [GitHub](https://github.com/microsoftgraph/msgraph-training-xamarin/blob/master/tutorial/images/no-profile-pic.png). If you use your own file, rename it to **no-profile-pic.png**.
 
-```cs
-public async Task SignIn()
-{
-    await GetUserInfo();
+1. Copy the file to the **./GraphTutorial/GraphTutorial** directory.
 
-    IsSignedIn = true;
-}
+1. Right-click the file in **Solution Explorer** and select **Properties**. In the **Properties** window, change the value of **Build Action** to **Embedded resource**.
 
-public async Task SignOut()
-{
-    UserPhoto = null;
-    UserName = string.Empty;
-    UserEmail = string.Empty;
-    IsSignedIn = false;
-}
-
-private async Task GetUserInfo()
-{
-    UserPhoto = ImageSource.FromStream(() => GetUserPhoto());
-    UserName = "Adele Vance";
-    UserEmail = "adelev@contoso.com";
-}
-
-private Stream GetUserPhoto()
-{
-    // Return the default photo
-    return Assembly.GetExecutingAssembly().GetManifestResourceStream("GraphTutorial.no-profile-pic.png");
-}
-```
-
-The `GetUserPhoto` function returns a default photo for now. You can either supply your own file here, or you can download the one used in the sample from [GitHub](https://github.com/microsoftgraph/msgraph-training-xamarin/blob/master/tutorial/images/no-profile-pic.png). Copy the file to the `./GraphTutorial/GraphTutorial` directory. Right-click the **GraphTutorial** project in **Solution Explorer** and select **Add**, then **Existing Item...**. Select the `no-profile-pic.png` file and select **Add**. Now right-click the file in **Solution Explorer** and select **Properties**. In the **Properties** window, change the value of **Build Action** to **Embedded resource**.
-
-![A screenshot of the Properties window for the PNG file](./images/png-file-properties.png)
+    ![A screenshot of the Properties window for the PNG file](./images/png-file-properties.png)
 
 ### App navigation
 
-Next, change the application's main page to a [Master-Detail page](/xamarin/xamarin-forms/app-fundamentals/navigation/master-detail-page). This will provide a navigation menu to switch between view in the app.
+In this section, you'll change the application's main page to a [Master-Detail page](/xamarin/xamarin-forms/app-fundamentals/navigation/master-detail-page). This will provide a navigation menu to switch between view in the app.
 
-Open the **MainPage.xaml** file in the **GraphTutorial** project and replace its contents with the following.
+1. Open the **MainPage.xaml** file in the **GraphTutorial** project and replace its contents with the following.
 
-```xml
-<?xml version="1.0" encoding="utf-8" ?>
-<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:GraphTutorial"
-             x:Class="GraphTutorial.MainPage">
-
-    <MasterDetailPage.Master>
-        <local:MenuPage/>
-    </MasterDetailPage.Master>
-
-    <MasterDetailPage.Detail>
-        <NavigationPage>
-            <x:Arguments>
-                <local:WelcomePage/>
-            </x:Arguments>
-        </NavigationPage>
-    </MasterDetailPage.Detail>
-
-</MasterDetailPage>
-```
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/MainPage.xaml":::
 
 #### Implement the menu
 
-Start by creating a model to represent the menu items. Right-click the **GraphTutorial** project and select **Add**, then **New Folder**. Name the folder `Models`.
+1. Right-click the **GraphTutorial** project and select **Add**, then **New Folder**. Name the folder `Models`.
 
-Right-click the **Models** folder and select **Add**, then **Class...**. Name the class `NavMenuItem` and select **Add**. Open the **NavMenuItem.cs** file and replace its contents with the following.
+1. Right-click the **Models** folder and select **Add**, then **Class...**. Name the class `NavMenuItem` and select **Add**.
 
-```cs
-namespace GraphTutorial.Models
-{
-    public enum MenuItemType
-    {
-        Welcome,
-        Calendar
-    }
+1. Open the **NavMenuItem.cs** file and replace its contents with the following.
 
-    public class NavMenuItem
-    {
-        public MenuItemType Id { get; set; }
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/Models/NavMenuItem.cs" id="NavMenuItemSnippet":::
 
-        public string Title { get; set; }
-    }
-}
-```
+1. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `MenuPage`. Select **Add**.
 
-Now add the menu page. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `MenuPage`. Select **Add**. Open the **MenuPage.xaml** file and replace its contents with the following.
+1. Open the **MenuPage.xaml** file and replace its contents with the following.
 
-```xml
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-             ios:Page.UseSafeArea="true"
-             Title="Menu"
-             x:Class="GraphTutorial.MenuPage">
-    <ContentPage.Padding>
-        <OnPlatform x:TypeArguments="Thickness">
-            <On Platform="UWP" Value="10, 10, 10, 10" />
-        </OnPlatform>
-    </ContentPage.Padding>
-    <ContentPage.Content>
-        <StackLayout VerticalOptions="Start" HorizontalOptions="Center">
-            <StackLayout x:Name="UserArea" />
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/MenuPage.xaml":::
 
-            <!-- Signed out UI -->
-            <StackLayout IsVisible="{Binding Path=IsSignedOut, Source={x:Static Application.Current}}">
-                <Label Text="Sign in to get started"
-                       HorizontalOptions="Center"
-                       FontAttributes="Bold"
-                       FontSize="Medium"
-                       Margin="10,20,10,20" />
-                <Button Text="Sign in"
-                        Clicked="OnSignIn"
-                        HorizontalOptions="Center" />
-            </StackLayout>
+1. Expand **MenuPage.xaml** in **Solution Explorer** and open the **MenuPage.xaml.cs** file. Replace its contents with the following.
 
-            <!-- Signed in UI -->
-            <StackLayout IsVisible="{Binding Path=IsSignedIn, Source={x:Static Application.Current}}">
-                <Image Source="{Binding Path=UserPhoto, Source={x:Static Application.Current}}"
-                       HorizontalOptions="Center"
-                       Margin="0,20,0,10" />
-                <Label Text="{Binding Path=UserName, Source={x:Static Application.Current}}"
-                       HorizontalOptions="Center"
-                       FontAttributes="Bold"
-                       FontSize="Small" />
-                <Label Text="{Binding Path=UserEmail, Source={x:Static Application.Current}}"
-                       HorizontalOptions="Center"
-                       FontAttributes="Italic" />
-                <Button Text="Sign out"
-                        Margin="0,20,0,20"
-                        Clicked="OnSignOut"
-                        HorizontalOptions="Center" />
-                <ListView x:Name="ListViewMenu"
-                          HasUnevenRows="True"
-                          HorizontalOptions="Start">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Grid Padding="10">
-                                    <Label Text="{Binding Title}" FontSize="20"/>
-                                </Grid>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackLayout>
-        </StackLayout>
-    </ContentPage.Content>
-</ContentPage>
-```
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/MenuPage.xaml.cs" id="MenuPageSnippet":::
 
-Now, expand **MenuPage.xaml** in **Solution Explorer** and open the **MenuPage.xaml.cs** file. Replace its contents with the following.
-
-```cs
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-using GraphTutorial.Models;
-
-namespace GraphTutorial
-{
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MenuPage : ContentPage
-    {
-        MainPage RootPage => Application.Current.MainPage as MainPage;
-        List<NavMenuItem> menuItems;
-
-        public MenuPage ()
-        {
-            InitializeComponent ();
-
-            // Add items to the menu
-            menuItems = new List<NavMenuItem>
-            {
-                new NavMenuItem {Id = MenuItemType.Welcome, Title="Home" },
-                new NavMenuItem {Id = MenuItemType.Calendar, Title="Calendar" }
-            };
-            ListViewMenu.ItemsSource = menuItems;
-
-            // Initialize the selected item
-            ListViewMenu.SelectedItem = menuItems[0];
-
-            // Handle the ItemSelected event to navigate to the
-            // selected page
-            ListViewMenu.ItemSelected += async (sender, e) =>
-            {
-                if (e.SelectedItem == null)
-                    return;
-
-                var id = (int)((NavMenuItem)e.SelectedItem).Id;
-                await RootPage.NavigateFromMenu(id);
-            };
-        }
-
-        private async void OnSignOut(object sender, EventArgs e)
-        {
-            var signout = await DisplayAlert("Sign out?", "Do you want to sign out?", "Yes", "No");
-            if (signout)
-            {
-                await (Application.Current as App).SignOut();
-            }
-        }
-
-        private async void OnSignIn(object sender, EventArgs e)
-        {
-            await (Application.Current as App).SignIn();
-        }
-    }
-}
-```
-
-> [!NOTE]
-> Visual Studio will report errors in **MenuPage.xaml.cs**. These errors will be resolved in a later step.
+    > [!NOTE]
+    > Visual Studio will report errors in **MenuPage.xaml.cs**. These errors will be resolved in a later step.
 
 #### Implement the welcome page
 
-Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `WelcomePage`. Select **Add**. Open the **WelcomePage.xaml** file and replace its contents with the following.
+1. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `WelcomePage`. Select **Add**. Open the **WelcomePage.xaml** file and replace its contents with the following.
 
-```xml
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             Title="Home"
-             x:Class="GraphTutorial.WelcomePage">
-    <ContentPage.Padding>
-        <OnPlatform x:TypeArguments="Thickness">
-            <On Platform="UWP" Value="10, 10, 10, 10" />
-        </OnPlatform>
-    </ContentPage.Padding>
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Graph Xamarin Tutorial App"
-                       HorizontalOptions="Center"
-                       FontAttributes="Bold"
-                       FontSize="Large"
-                       Margin="10,20,10,20" />
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/WelcomePage.xaml":::
 
-            <!-- Signed out UI -->
-            <StackLayout IsVisible="{Binding Path=IsSignedOut, Source={x:Static Application.Current}}">
-                <Label Text="Please sign in to get started"
-                       HorizontalOptions="Center"
-                       FontSize="Medium"
-                       Margin="10,0,10,20"/>
-                <Button Text="Sign in"
-                        HorizontalOptions="Center"
-                        Clicked="OnSignIn" />
-            </StackLayout>
+1. Expand **WelcomePage.xaml** in **Solution Explorer** and open the **WelcomePage.xaml.cs** file. Add the following function to the `WelcomePage` class.
 
-            <!-- Signed in UI -->
-            <StackLayout IsVisible="{Binding Path=IsSignedIn, Source={x:Static Application.Current}}">
-                <Label Text="{Binding Path=UserName, Source={x:Static Application.Current}, StringFormat='Welcome \{0\}!'}"
-                       HorizontalOptions="Center"
-                       FontSize="Medium"/>
-            </StackLayout>
-        </StackLayout>
-    </ContentPage.Content>
-</ContentPage>
-```
-
-Now, expand **WelcomePage.xaml** in **Solution Explorer** and open the **WelcomePage.xaml.cs** file. Add the following function to the `WelcomePage` class.
-
-```cs
-private void OnSignIn(object sender, EventArgs e)
-{
-    (App.Current.MainPage as MasterDetailPage).IsPresented = true;
-}
-```
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/WelcomePage.xaml.cs" id="OnSignInSnippet":::
 
 #### Add calendar page
 
-Now add a calendar page. This will just be a placeholder for now. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `CalendarPage`. Select **Add**.
+Now add a calendar page. This will just be a placeholder for now.
 
-Leave the added page as-is for now.
+1. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `CalendarPage`. Select **Add**.
 
 #### Update MainPage code-behind
 
-Now that all of the pages are in place, update the code-behind for **MainPage.xaml**. Expand **MainPage.xaml** in **Solution Explorer** and open the **MainPage.xaml.cs** file and replace its entire contents with the following.
+Now that all of the pages are in place, update the code-behind for **MainPage.xaml**.
 
-```cs
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
-using GraphTutorial.Models;
+1. Expand **MainPage.xaml** in **Solution Explorer** and open the **MainPage.xaml.cs** file and replace its entire contents with the following.
 
-namespace GraphTutorial
-{
-    public partial class MainPage : MasterDetailPage
-    {
-        Dictionary<int, NavigationPage> MenuPages = new Dictionary<int, NavigationPage>();
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/MainPage.xaml.cs" id="MainPageSnippet":::
 
-        public MainPage()
-        {
-            InitializeComponent();
+1. Save all of your changes. Right-click the project that you want to run (Android, iOS, or UWP) and select **Set as StartUp Project**. Press **F5** or select **Debug > Start Debugging** in Visual Studio.
 
-            MasterBehavior = MasterBehavior.Popover;
-
-            // Load the welcome page at start
-            MenuPages.Add((int)MenuItemType.Welcome, (NavigationPage)Detail);
-        }
-
-        // Navigate to the selected page
-        public async Task NavigateFromMenu(int id)
-        {
-            if (!MenuPages.ContainsKey(id))
-            {
-                switch (id)
-                {
-                    case (int)MenuItemType.Welcome:
-                        MenuPages.Add(id, new NavigationPage(new WelcomePage()));
-                        break;
-                    case (int)MenuItemType.Calendar:
-                        MenuPages.Add(id, new NavigationPage(new CalendarPage()));
-                        break;
-                }
-            }
-
-            var newPage = MenuPages[id];
-
-            if (newPage != null && Detail != newPage)
-            {
-                Detail = newPage;
-
-                if (Device.RuntimePlatform == Device.Android)
-                    await Task.Delay(100);
-
-                IsPresented = false;
-            }
-        }
-    }
-}
-```
-
-Save all of your changes. Right-click the project that you want to run (Android, iOS, or UWP) and select **Set as StartUp Project**. Press **F5** or select **Debug > Start Debugging** in Visual Studio.
-
-![Screenshots of the Android, iOS, and UWP versions of the application](./images/welcome-page.png)
+    ![Screenshots of the Android, iOS, and UWP versions of the application](./images/welcome-page.png)
