@@ -70,4 +70,4 @@ namespace GraphTutorial
         }
     }
 }
-// <MenuPageSnippet>
+// </MenuPageSnippet>
