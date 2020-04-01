@@ -16,7 +16,6 @@
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidUseAapt2>true</AndroidUseAapt2>
@@ -93,7 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GraphTutorial\GraphTutorial.csproj">
-      <Project>{9EB0E557-E72A-4E54-827F-D4B378A728AE}</Project>
+      <Project>{3B52E9E1-86AB-4AFF-838B-7A5EA59041DC}</Project>
       <Name>GraphTutorial</Name>
     </ProjectReference>
   </ItemGroup>

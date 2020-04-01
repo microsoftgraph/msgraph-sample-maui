@@ -27,6 +27,8 @@
     <MtouchArch>x86_64</MtouchArch>
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -132,7 +134,7 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\GraphTutorial\GraphTutorial.csproj">
-      <Project>{9EB0E557-E72A-4E54-827F-D4B378A728AE}</Project>
+      <Project>{3B52E9E1-86AB-4AFF-838B-7A5EA59041DC}</Project>
       <Name>GraphTutorial</Name>
     </ProjectReference>
   </ItemGroup>

@@ -95,7 +95,8 @@ namespace GraphTutorial
             InitializeComponent();
 
             var builder = PublicClientApplicationBuilder
-                .Create(OAuthSettings.ApplicationId);
+                .Create(OAuthSettings.ApplicationId)
+                .WithRedirectUri(OAuthSettings.RedirectUri);
 
             if (!string.IsNullOrEmpty(iOSKeychainSecurityGroup))
             {

@@ -54,52 +54,26 @@ In this exercise you will extend the application from the previous exercise to s
 
 When used in a Xamarin Android project, the Microsoft Authentication Library has a few [requirements specific to Android](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/Xamarin-Android-specifics).
 
-First, you need to update the Android manifest to register the redirect URI. In **GraphTutorial.Android** project, expand the **Properties** folder, then open **AndroidManifest.xml**. If you're using Visual Studio for Mac, switch to the **Source** view using the tabs at the bottom of the file. Replace the entire contents with the following.
+1. In **GraphTutorial.Android** project, expand the **Properties** folder, then open **AndroidManifest.xml**. If you're using Visual Studio for Mac, Control click **AndroidManifest.xml** and choose **Open With**, then **Source Code Editor**. Replace the entire contents with the following.
 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.companyname.GraphTutorial">
-    <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28" />
-    <application android:label="GraphTutorial.Android">
-        <activity android:name="microsoft.identity.client.BrowserTabActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="msalYOUR_APP_ID_HERE" android:host="auth" />
-            </intent-filter>
-        </activity>
-    </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-</manifest>
-```
+    :::code language="xml" source="../demo/GraphTutorial/GraphTutorial.Android/Properties/AndroidManifest.xml":::
 
-Replace `YOUR_APP_ID_HERE` with your application ID from your app registration.
+1. Open **MainActivity.cs** and add the following `using` statements to the top of the file.
 
-Next, open **MainActivity.cs** and add the following `using` statements to the top of the file.
+    ```csharp
+    using Android.Content;
+    using Microsoft.Identity.Client;
+    ```
 
-```cs
-using Microsoft.Identity.Client;
-using Android.Content;
-```
+1. Override the `OnActivityResult` function to pass control to the MSAL library. Add the following to the `MainActivity` class.
 
-Then, override the `OnActivityResult` function to pass control to the MSAL library. Add the following to the `MainActivity` class.
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial.Android/MainActivity.cs" id="OnActivityResultSnippet":::
 
-```cs
-protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
-{
-    base.OnActivityResult(requestCode, resultCode, data);
-    AuthenticationContinuationHelper
-        .SetAuthenticationContinuationEventArgs(requestCode, resultCode, data);
-}
-```
+1. In the `OnCreate` function, add the following line after the `LoadApplication(new App());` line.
 
-Finally, in the `OnCreate` function, add the following line after the `LoadApplication(new App());` line.
-
-```cs
-App.AuthUIParent = this;
-```
+    ```csharp
+    App.AuthUIParent = this;
+    ```
 
 ### Update iOS project to enable sign-in
 
@@ -108,45 +82,30 @@ App.AuthUIParent = this;
 
 When used in a Xamarin iOS project, the Microsoft Authentication Library has a few [requirements specific to iOS](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/Xamarin-iOS-specifics).
 
-First, you need to enable Keychain access. In Solution Explorer, expand the **GraphTutorial.iOS** project, then open the **Entitlements.plist** file. Locate the **Keychain** entitlement, and select **Enable KeyChain**. In **Keychain Groups**, add an entry with the format `com.YOUR_DOMAIN.GraphTutorial`.
+1. In Solution Explorer, expand the **GraphTutorial.iOS** project, then open the **Entitlements.plist** file.
 
-![A screenshot of the Keychain entitlement configuration](./images/enable-keychain-access.png)
+1. Locate the **Keychain** entitlement, and select **Enable KeyChain**.
 
-Next, you need to register the default MSAL redirect URI as a URL type that your app handles. Open the **Info.plist** file and make the following changes.
+1. In **Keychain Groups**, add an entry with the format `com.companyname.GraphTutorial`.
 
-- On the **Application** tab, check that the value of **Bundle identifier** matches the value you set for **Keychain Groups** in **Entitlements.plist**. If it doesn't, update it now.
-- On the **Advanced** tab, locate the **URL Types** section. Add a URL type here with the following values:
-  - **Identifier**: set to the value of your **Bundle identifier**
-  - **URL Schemes**: set to `msal{YOUR-APP-ID}`. For example, if your app ID is `67ad5eba-0cfc-414d-8f9f-0a6d973a907c`, you would set this to `msal67ad5eba-0cfc-414d-8f9f-0a6d973a907c`.
-  - **Role**: `Editor`
-  - **Icon**: Leave empty
+    ![A screenshot of the Keychain entitlement configuration](./images/enable-keychain-access.png)
 
-![A screenshot of the URL Types section of Info.plist](./images/add-url-type.png)
+1. Update the code in the **GraphTutorial.iOS** project to handle the redirect during authentication. Open the **AppDelegate.cs** file and add the following `using` statement at the top of the file.
 
-Finally, update the code in the **GraphTutorial.iOS** project to handle the redirect during authentication. Open the **AppDelegate.cs** file and add the following `using` statement at the top of the file.
+    ```csharp
+    using Microsoft.Identity.Client;
+    ```
 
-```cs
-using Microsoft.Identity.Client;
-```
+1. Add the following line to `FinishedLaunching` function just before the `LoadApplication(new App());` line.
 
-Add the following line to `FinishedLaunching` function just before the `LoadApplication(new App());` line.
+    ```csharp
+    // Specify the Keychain access group
+    App.iOSKeychainSecurityGroup = NSBundle.MainBundle.BundleIdentifier;
+    ```
 
-```cs
-// Specify the Keychain access group
-App.iOSKeychainSecurityGroup = NSBundle.MainBundle.BundleIdentifier;
-```
+1. Override the `OpenUrl` function to pass the URL to the MSAL library. Add the following to the `AppDelegate` class.
 
-Finally, override the `OpenUrl` function to pass the URL to the MSAL library. Add the following to the `AppDelegate` class.
-
-```cs
-// Handling redirect URL
-// See: https://github.com/azuread/microsoft-authentication-library-for-dotnet/wiki/Xamarin-iOS-specifics
-public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
-{
-    AuthenticationContinuationHelper.SetAuthenticationContinuationEventArgs(url);
-    return true;
-}
-```
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial.iOS/AppDelegate.cs" id="OpenUrlSnippet":::
 
 ## Storing the tokens
 
