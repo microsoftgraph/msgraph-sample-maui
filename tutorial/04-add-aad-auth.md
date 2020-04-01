@@ -38,7 +38,7 @@ In this exercise you will extend the application from the previous exercise to s
 
 1. Next, create a new `PublicClientApplication` in the constructor of the `App` class.
 
-    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/App.xaml.cs" id="AppConstructorSnippet" highlight="5-13":::
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/App.xaml.cs" id="AppConstructorSnippet" highlight="5-14":::
 
 1. Update the `SignIn` function to use the `PublicClientApplication` to get an access token. Add the following code above the `await GetUserInfo();` line.
 

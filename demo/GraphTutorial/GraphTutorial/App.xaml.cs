@@ -203,8 +203,9 @@ namespace GraphTutorial
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(
-                    $"Failed to initialized graph client. Accounts in the msal cache: {currentAccounts.Count()}. See exception message for details: {ex.Message}");
+                Debug.WriteLine("Failed to initialized graph client.");
+                Debug.WriteLine($"Accounts in the msal cache: {currentAccounts.Count()}.");
+                Debug.WriteLine($"See exception message for details: {ex.Message}");
             }
         }
         // </InitializeGraphClientSnippet>
