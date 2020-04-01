@@ -56,7 +56,7 @@ Start by updating the `App` class to add variables to track the authentication s
 
 1. Add the following properties to the `App` class.
 
-    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/GraphTutorial/App.xaml.cs" id="GlobalPropertiesSnippet":::
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/App.xaml.cs" id="GlobalPropertiesSnippet":::
 
 1. Add the following functions to the `App` class. The `SignIn`, `SignOut`, and `GetUserInfo` functions are just placeholders for now.
 
