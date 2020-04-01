@@ -1,9 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using GraphTutorial.Models;
+using Microsoft.Identity.Client;
+using Microsoft.Graph;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -11,8 +17,25 @@ using Xamarin.Forms.Xaml;
 
 namespace GraphTutorial
 {
-    public partial class App : Application, INotifyPropertyChanged
+    public partial class App : Xamarin.Forms.Application, INotifyPropertyChanged
     {
+        // <AuthPropertiesSnippet>
+        // UIParent used by Android version of the app
+        public static object AuthUIParent = null;
+
+        // Keychain security group used by iOS version of the app
+        public static string iOSKeychainSecurityGroup = null;
+
+        // Microsoft Authentication client for native/mobile apps
+        public static IPublicClientApplication PCA;
+
+        // Microsoft Graph client
+        public static GraphServiceClient GraphClient;
+
+        // Microsoft Graph permissions used by app
+        private readonly string[] Scopes = OAuthSettings.Scopes.Split(' ');
+        // </AuthPropertiesSnippet>
+
         // <GlobalPropertiesSnippet>
         // Is a user signed in?
         private bool isSignedIn;
@@ -66,15 +89,66 @@ namespace GraphTutorial
         }
         // </GlobalPropertiesSnippet>
 
+        // <AppConstructorSnippet>
         public App()
         {
             InitializeComponent();
 
+            var builder = PublicClientApplicationBuilder
+                .Create(OAuthSettings.ApplicationId);
+
+            if (!string.IsNullOrEmpty(iOSKeychainSecurityGroup))
+            {
+                builder = builder.WithIosKeychainSecurityGroup(iOSKeychainSecurityGroup);
+            }
+
+            PCA = builder.Build();
+
             MainPage = new MainPage();
         }
+        // </AppConstructorSnippet>
 
         public async Task SignIn()
         {
+            // <GetTokenSnippet>
+            // First, attempt silent sign in
+            // If the user's information is already in the app's cache,
+            // they won't have to sign in again.
+            try
+            {
+                var accounts = await PCA.GetAccountsAsync();
+
+                var silentAuthResult = await PCA
+                    .AcquireTokenSilent(Scopes, accounts.FirstOrDefault())
+                    .ExecuteAsync();
+
+                Debug.WriteLine("User already signed in.");
+                Debug.WriteLine($"Successful silent authentication for: {silentAuthResult.Account.Username}");
+                Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
+            }
+            catch (MsalUiRequiredException msalEx)
+            {
+                // This exception is thrown when an interactive sign-in is required.
+                Debug.WriteLine("Silent token request failed, user needs to sign-in: " + msalEx.Message);
+                // Prompt the user to sign-in
+                var interactiveRequest = PCA.AcquireTokenInteractive(Scopes);
+
+                if (AuthUIParent != null)
+                {
+                    interactiveRequest = interactiveRequest
+                        .WithParentActivityOrWindow(AuthUIParent);
+                }
+
+                var interactiveAuthResult = await interactiveRequest.ExecuteAsync();
+                Debug.WriteLine($"Successful interactive authentication for: {interactiveAuthResult.Account.Username}");
+                Debug.WriteLine($"Access token: {interactiveAuthResult.AccessToken}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Authentication failed. See exception messsage for more details: " + ex.Message);
+            }
+            // </GetTokenSnippet>
+
             await GetUserInfo();
 
             IsSignedIn = true;
@@ -82,6 +156,18 @@ namespace GraphTutorial
 
         public async Task SignOut()
         {
+            // <RemoveAccountSnippet>
+            // Get all cached accounts for the app
+            // (Should only be one)
+            var accounts = await PCA.GetAccountsAsync();
+            while (accounts.Any())
+            {
+                // Remove the account info from the cache
+                await PCA.RemoveAsync(accounts.First());
+                accounts = await PCA.GetAccountsAsync();
+            }
+            // </RemoveAccountSnippet>
+
             UserPhoto = null;
             UserName = string.Empty;
             UserEmail = string.Empty;

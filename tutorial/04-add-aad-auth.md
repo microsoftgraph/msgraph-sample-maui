@@ -2,139 +2,53 @@
 
 In this exercise you will extend the application from the previous exercise to support authentication with Azure AD. This is required to obtain the necessary OAuth access token to call the Microsoft Graph. In this step you will integrate the [Microsoft Authentication Library for .NET (MSAL)](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet) into the application.
 
-In **Solution Explorer**, expand the **GraphTutorial** project and right-click the **Models** folder. Select **Add > Class...**. Name the class `OAuthSettings` and select **Add**. Open the **OAuthSettings.cs** file and replace its contents with the following.
+1. In **Solution Explorer**, expand the **GraphTutorial** project and right-click the **Models** folder. Select **Add > Class...**. Name the class `OAuthSettings` and select **Add**.
 
-```cs
-namespace GraphTutorial.Models
-{
-    public static class OAuthSettings
-    {
-        public const string ApplicationId = "YOUR_APP_ID_HERE";
-        public const string Scopes = "User.Read Calendars.Read";
-    }
-}
-```
+1. Open the **OAuthSettings.cs** file and replace its contents with the following.
 
-Replace `YOUR_APP_ID_HERE` with the application ID from your app registration.
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/Models/OAuthSettings.cs.example":::
 
-> [!IMPORTANT]
-> If you're using source control such as git, now would be a good time to exclude the `OAuthSettings.cs` file from source control to avoid inadvertently leaking your app ID.
+1. Replace `YOUR_APP_ID_HERE` with the application ID from your app registration.
+
+    > [!IMPORTANT]
+    > If you're using source control such as git, now would be a good time to exclude the `OAuthSettings.cs` file from source control to avoid inadvertently leaking your app ID.
 
 ## Implement sign-in
 
-Open the **App.xaml.cs** file in the **GraphTutorial** project, and add the following `using` statements to the top of the file.
+1. Open the **App.xaml.cs** file in the **GraphTutorial** project, and add the following `using` statements to the top of the file.
 
-```cs
-using GraphTutorial.Models;
-using Microsoft.Identity.Client;
-using Microsoft.Graph;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http.Headers;
-```
+    ```csharp
+    using GraphTutorial.Models;
+    using Microsoft.Identity.Client;
+    using Microsoft.Graph;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Net.Http.Headers;
+    ```
 
-Change the **App** class declaration line to resolve the name conflict for **Application**.
+1. Change the **App** class declaration line to resolve the name conflict for **Application**.
 
-```cs
-public partial class App : Xamarin.Forms.Application, INotifyPropertyChanged
-```
+    ```csharp
+    public partial class App : Xamarin.Forms.Application, INotifyPropertyChanged
+    ```
 
-Add the following properties to the `App` class.
+1. Add the following properties to the `App` class.
 
-```cs
-// UIParent used by Android version of the app
-public static object AuthUIParent = null;
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/App.xaml.cs" id="AuthPropertiesSnippet":::z
 
-// Keychain security group used by iOS version of the app
-public static string iOSKeychainSecurityGroup = null;
+1. Next, create a new `PublicClientApplication` in the constructor of the `App` class.
 
-// Microsoft Authentication client for native/mobile apps
-public static IPublicClientApplication PCA;
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/App.xaml.cs" id="AppConstructorSnippet" highlight="5-13":::
 
-// Microsoft Graph client
-public static GraphServiceClient GraphClient;
+1. Update the `SignIn` function to use the `PublicClientApplication` to get an access token. Add the following code above the `await GetUserInfo();` line.
 
-// Microsoft Graph permissions used by app
-private readonly string[] Scopes = OAuthSettings.Scopes.Split(' ');
-```
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/App.xaml.cs" id="GetTokenSnippet":::
 
-Next, create a new `PublicClientApplication` in the constructor of the `App` class.
+    This code first attempts to get an access token silently. If a user's information is already in the app's cache (for example, if the user closed the app previously without signing out), this will succeed, and there's no reason to prompt the user. If there is not a user's information in the cache, the `AcquireTokenSilent().ExecuteAsync()` function throws an `MsalUiRequiredException`. In this case, the code calls the interactive function to get a token, `AcquireTokenInteractive`.
 
-```cs
-public App()
-{
-    InitializeComponent();
+1. Update the `SignOut` function to remove the user's information from the cache. Add the following code to the beginning of the `SignOut` function.
 
-    var builder = PublicClientApplicationBuilder
-        .Create(OAuthSettings.ApplicationId);
-
-    if (!string.IsNullOrEmpty(iOSKeychainSecurityGroup))
-    {
-        builder = builder.WithIosKeychainSecurityGroup(iOSKeychainSecurityGroup);
-    }
-
-    PCA = builder.Build();
-
-    MainPage = new MainPage();
-}
-```
-
-Now update the `SignIn` function to use the `PublicClientApplication` to get an access token. Add the following code above the `await GetUserInfo();` line.
-
-```cs
-// First, attempt silent sign in
-// If the user's information is already in the app's cache,
-// they won't have to sign in again.
-try
-{
-    var accounts = await PCA.GetAccountsAsync();
-
-    var silentAuthResult = await PCA
-        .AcquireTokenSilent(Scopes, accounts.FirstOrDefault())
-        .ExecuteAsync();
-
-    Debug.WriteLine("User already signed in.");
-    Debug.WriteLine($"Successful silent authentication for: {silentAuthResult.Account.Username}");
-    Debug.WriteLine($"Access token: {silentAuthResult.AccessToken}");
-}
-catch (MsalUiRequiredException msalEx)
-{
-    // This exception is thrown when an interactive sign-in is required.
-    Debug.WriteLine("Silent token request failed, user needs to sign-in: " + msalEx.Message);
-    // Prompt the user to sign-in
-    var interactiveRequest = PCA.AcquireTokenInteractive(Scopes);
-
-    if (AuthUIParent != null)
-    {
-        interactiveRequest = interactiveRequest
-            .WithParentActivityOrWindow(AuthUIParent);
-    }
-
-    var interactiveAuthResult = await interactiveRequest.ExecuteAsync();
-    Debug.WriteLine($"Successful interactive authentication for: {interactiveAuthResult.Account.Username}");
-    Debug.WriteLine($"Access token: {interactiveAuthResult.AccessToken}");
-}
-catch (Exception ex)
-{
-    Debug.WriteLine("Authentication failed. See exception messsage for more details: " + ex.Message);
-}
-```
-
-This code first attempts to get an access token silently. If a user's information is already in the app's cache (for example, if the user closed the app previously without signing out), this will succeed, and there's no reason to prompt the user. If there is not a user's information in the cache, the `AcquireTokenSilent().ExecuteAsync()` function throws an `MsalUiRequiredException`. In this case, the code calls the interactive function to get a token, `AcquireTokenInteractive`.
-
-Now update the `SignOut` function to remove the user's information from the cache. Add the following code to the beginning of the `SignOut` function.
-
-```cs
-// Get all cached accounts for the app
-// (Should only be one)
-var accounts = await PCA.GetAccountsAsync();
-while (accounts.Any())
-{
-    // Remove the account info from the cache
-    await PCA.RemoveAsync(accounts.First());
-    accounts = await PCA.GetAccountsAsync();
-}
-```
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/App.xaml.cs" id="RemoveAccountSnippet":::
 
 ### Update Android project to enable sign-in
 

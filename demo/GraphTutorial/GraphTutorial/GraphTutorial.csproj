@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Models\OAuthSettings.cs.example" />
     <None Remove="no-profile-pic.png" />
   </ItemGroup>
 

@@ -59,7 +59,14 @@ namespace GraphTutorial
 
         private async void OnSignIn(object sender, EventArgs e)
         {
-            await (Application.Current as App).SignIn();
+            try
+            {
+                await (Application.Current as App).SignIn();
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Authentication Error", ex.Message, "OK");
+            }
         }
     }
 }
