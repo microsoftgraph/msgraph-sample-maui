@@ -12,14 +12,10 @@ In this exercise you will create a new Azure AD native application using the Azu
 
     - Set **Name** to `Xamarin Graph Tutorial`.
     - Set **Supported account types** to **Accounts in any organizational directory and personal Microsoft accounts**.
-    - Under **Redirect URI (optional)**, change the dropdown to **Public client (mobile & desktop)**, and set the value to `urn:ietf:wg:oauth:2.0:oob`.
+    - Under **Redirect URI (optional)**, change the dropdown to **Public client (mobile & desktop)**, and set the value to `msauth://com.companyname.GraphTutorial`.
 
     ![A screenshot of the Register an application page](./images/aad-register-an-app.png)
 
 1. Select **Register**. On the **Xamarin Graph Tutorial** page, copy the value of the **Application (client) ID** and save it, you will need it in the next step.
 
     ![A screenshot of the application ID of the new app registration](./images/aad-application-id.png)
-
-1. Select the **Authentication** under **Manage**. Locate the **Suggested Redirect URIs for public clients (mobile, desktop)** section. Select the URI that begins with `msal`, then select **Save**.
-
-    ![A screenshot of the Redirect URIs page](./images/aad-redirect-uris.png)

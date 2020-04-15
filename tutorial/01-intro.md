@@ -13,8 +13,13 @@ You should also have Xamarin installed as part of your Visual Studio installatio
 
 Optionally you should also have access to a Mac with Visual Studio for Mac installed. If you do not have access, you can still complete this tutorial, but will be unable to complete the iOS-specific sections.
 
+You should also have either a personal Microsoft account with a mailbox on Outlook.com, or a Microsoft work or school account. If you don't have a Microsoft account, there are a couple of options to get a free account:
+
+- You can [sign up for a new personal Microsoft account](https://signup.live.com/signup?wa=wsignin1.0&rpsnv=12&ct=1454618383&rver=6.4.6456.0&wp=MBI_SSL_SHARED&wreply=https://mail.live.com/default.aspx&id=64855&cbcxt=mai&bk=1454618383&uiflavor=web&uaid=b213a65b4fdc484382b6622b3ecaa547&mkt=E-US&lc=1033&lic=1).
+- You can [sign up for the Office 365 Developer Program](https://developer.microsoft.com/office/dev-program) to get a free Office 365 subscription.
+
 > [!NOTE]
-> This tutorial was written with Visual Studio 2019 version 16.3.10 and Visual Studio for Mac version 7.7.4. Both machines have the Android SDK Platform 28 installed. The steps in this guide may work with other versions, but that has not been tested.
+> This tutorial was written with Visual Studio 2019 version 16.5.2 and Visual Studio for Mac version 8.5.1. Both machines have the Android SDK Platform 28 installed. The steps in this guide may work with other versions, but that has not been tested.
 
 ## Feedback
 
