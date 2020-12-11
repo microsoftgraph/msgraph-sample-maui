@@ -139,11 +139,13 @@ In this section, you'll change the application's main page to a [Master-Detail p
 
     :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/WelcomePage.xaml.cs" id="OnSignInSnippet":::
 
-#### Add calendar page
+#### Add calendar and new event pages
 
-Now add a calendar page. This will just be a placeholder for now.
+Now add a calendar page and a new event page. These will just be placeholders for now.
 
 1. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `CalendarPage`. Select **Add**.
+
+1. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `NewEventPage`. Select **Add**.
 
 #### Update MainPage code-behind
 
