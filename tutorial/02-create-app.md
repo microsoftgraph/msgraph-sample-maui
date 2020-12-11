@@ -29,10 +29,10 @@ Before moving on, install some additional NuGet packages that you will use later
 1. In the Package Manager Console, enter the following commands.
 
     ```Powershell
-    Install-Package Microsoft.Identity.Client -Version 4.10.0 -Project GraphTutorial
-    Install-Package Microsoft.Identity.Client -Version 4.10.0 -Project GraphTutorial.Android
-    Install-Package Microsoft.Identity.Client -Version 4.10.0 -Project GraphTutorial.iOS
-    Install-Package Microsoft.Graph -Version 3.0.1 -Project GraphTutorial
+    Install-Package Microsoft.Identity.Client -Version 4.24.0 -Project GraphTutorial
+    Install-Package Microsoft.Identity.Client -Version 4.24.0 -Project GraphTutorial.Android
+    Install-Package Microsoft.Identity.Client -Version 4.24.0 -Project GraphTutorial.iOS
+    Install-Package Microsoft.Graph -Version 3.21.0 -Project GraphTutorial
     ```
 
 ## Design the app
