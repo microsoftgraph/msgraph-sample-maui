@@ -39,8 +39,19 @@ In this exercise you will incorporate the Microsoft Graph into the application. 
     {
         base.OnAppearing();
 
+        // Get start and end of week in user's time zone
+        var startOfWeek = GetUtcStartOfWeekInTimeZone(DateTime.Today, App.UserTimeZone);
+        var endOfWeek = startOfWeek.AddDays(7);
+
+        var queryOptions = new List<QueryOption>
+        {
+            new QueryOption("startDateTime", startOfWeek.ToString("o")),
+            new QueryOption("endDateTime", endOfWeek.ToString("o"))
+        };
+
         // Get the events
-        var events = await App.GraphClient.Me.Events.Request()
+        var events = await App.GraphClient.Me.CalendarView.Request(queryOptions)
+            .Header("Prefer", $"outlook.timezone=\"{App.UserTimeZone.StandardName}\"")
             .Select(e => new
             {
                 e.Subject,
@@ -48,7 +59,8 @@ In this exercise you will incorporate the Microsoft Graph into the application. 
                 e.Start,
                 e.End
             })
-            .OrderBy("createdDateTime DESC")
+            .OrderBy("start/DateTime")
+            .Top(50)
             .GetAsync();
 
         // Temporary
@@ -58,9 +70,12 @@ In this exercise you will incorporate the Microsoft Graph into the application. 
 
     Consider what the code in `OnAppearing` is doing.
 
-    - The URL that will be called is `/v1.0/me/events`.
-    - The `Select` function limits the fields returned for each events to just those the view will actually use.
-    - The `OrderBy` function sorts the results by the date and time they were created, with the most recent item being first.
+    - The URL that will be called is `/v1.0/me/calendarview`.
+        - The `startDateTime` and `endDateTime` parameters define the start and end of the calendar view.
+        - The `Prefer: outlook.timezone` header causes the `start` and `end` of the events to be returned in the user's time zone.
+        - The `Select` function limits the fields returned for each event to just those the app will actually use.
+        - The `OrderBy` function sorts the results by the start date and time.
+        - The `Top` function requests at most 50 events.
 
 1. Run the app, sign in, and click the **Calendar** navigation item in the menu. You should see a JSON dump of the events on the user's calendar.
 

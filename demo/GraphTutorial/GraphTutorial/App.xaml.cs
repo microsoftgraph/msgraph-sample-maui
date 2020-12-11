@@ -87,6 +87,9 @@ namespace GraphTutorial
                 OnPropertyChanged("UserPhoto");
             }
         }
+
+        // The user's time zone
+        public static TimeZoneInfo UserTimeZone;
         // </GlobalPropertiesSnippet>
 
         // <AppConstructorSnippet>
@@ -214,11 +217,27 @@ namespace GraphTutorial
         private async Task GetUserInfo()
         {
             // Get the logged on user's profile (/me)
-            var user = await GraphClient.Me.Request().GetAsync();
+            var user = await GraphClient.Me.Request()
+                .Select(u => new
+                {
+                    u.DisplayName,
+                    u.Mail,
+                    u.MailboxSettings,
+                    u.UserPrincipalName
+                })
+                .GetAsync();
 
             UserPhoto = ImageSource.FromStream(() => GetUserPhoto());
             UserName = user.DisplayName;
             UserEmail = string.IsNullOrEmpty(user.Mail) ? user.UserPrincipalName : user.Mail;
+            try
+            {
+                UserTimeZone = TimeZoneInfo.FindSystemTimeZoneById(user.MailboxSettings.TimeZone);
+            } catch
+            {
+                // Default to local time zone
+                UserTimeZone = TimeZoneInfo.Local;
+            }
         }
         // </GetUserInfoSnippet>
 
