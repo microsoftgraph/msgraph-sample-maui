@@ -39,7 +39,7 @@ namespace GraphTutorial
 
             // Get the events
             var events = await App.GraphClient.Me.CalendarView.Request(queryOptions)
-                .Header("Prefer", $"outlook.timezone=\"{App.UserTimeZone.StandardName}\"")
+                .Header("Prefer", $"outlook.timezone=\"{App.UserTimeZone.DisplayName}\"")
                 .Select(e => new 
                 { 
                     e.Subject, 

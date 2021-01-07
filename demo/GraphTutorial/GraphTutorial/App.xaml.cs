@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using TimeZoneConverter;
 
 namespace GraphTutorial
 {
@@ -232,7 +233,7 @@ namespace GraphTutorial
             UserEmail = string.IsNullOrEmpty(user.Mail) ? user.UserPrincipalName : user.Mail;
             try
             {
-                UserTimeZone = TimeZoneInfo.FindSystemTimeZoneById(user.MailboxSettings.TimeZone);
+                UserTimeZone = TZConvert.GetTimeZoneInfo(user.MailboxSettings.TimeZone);
             } catch
             {
                 // Default to local time zone

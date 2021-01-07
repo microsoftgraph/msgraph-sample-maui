@@ -23,6 +23,7 @@ Before moving on, install some additional NuGet packages that you will use later
 
 - [Microsoft.Identity.Client](https://www.nuget.org/packages/Microsoft.Identity.Client/) to handle Azure AD authentication and token management.
 - [Microsoft.Graph](https://www.nuget.org/packages/Microsoft.Graph/) for making calls to the Microsoft Graph.
+- [TimeZoneConverter](https://www.nuget.org/packages/TimeZoneConverter/) for handling time zones cross-platform.
 
 1. Select **Tools > NuGet Package Manager > Package Manager Console**.
 
@@ -33,6 +34,7 @@ Before moving on, install some additional NuGet packages that you will use later
     Install-Package Microsoft.Identity.Client -Version 4.24.0 -Project GraphTutorial.Android
     Install-Package Microsoft.Identity.Client -Version 4.24.0 -Project GraphTutorial.iOS
     Install-Package Microsoft.Graph -Version 3.21.0 -Project GraphTutorial
+    Install-Package TimeZoneConverter -Version 3.3.0 -Project GraphTutorial
     ```
 
 ## Design the app

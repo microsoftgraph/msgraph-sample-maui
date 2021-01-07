@@ -179,12 +179,12 @@ namespace GraphTutorial
                 Start = new DateTimeTimeZone
                 {
                     DateTime = Start.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss"),
-                    TimeZone = App.UserTimeZone.StandardName
+                    TimeZone = App.UserTimeZone.DisplayName
                 },
                 End = new DateTimeTimeZone
                 {
                     DateTime = End.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss"),
-                    TimeZone = App.UserTimeZone.StandardName
+                    TimeZone = App.UserTimeZone.DisplayName
                 }
             };
 

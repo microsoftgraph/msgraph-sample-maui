@@ -51,7 +51,7 @@ In this exercise you will incorporate the Microsoft Graph into the application. 
 
         // Get the events
         var events = await App.GraphClient.Me.CalendarView.Request(queryOptions)
-            .Header("Prefer", $"outlook.timezone=\"{App.UserTimeZone.StandardName}\"")
+            .Header("Prefer", $"outlook.timezone=\"{App.UserTimeZone.DisplayName}\"")
             .Select(e => new
             {
                 e.Subject,
