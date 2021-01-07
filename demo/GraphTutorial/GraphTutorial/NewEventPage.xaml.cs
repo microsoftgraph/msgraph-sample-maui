@@ -172,6 +172,10 @@ namespace GraphTutorial
         {
             IsWorking = true;
 
+            var timeZoneString =
+                Xamarin.Forms.Device.RuntimePlatform == Xamarin.Forms.Device.UWP ?
+                    App.UserTimeZone.StandardName : App.UserTimeZone.DisplayName;
+
             // Initialize a new Event object with the required fields
             var newEvent = new Event
             {
@@ -179,12 +183,12 @@ namespace GraphTutorial
                 Start = new DateTimeTimeZone
                 {
                     DateTime = Start.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss"),
-                    TimeZone = App.UserTimeZone.DisplayName
+                    TimeZone = timeZoneString
                 },
                 End = new DateTimeTimeZone
                 {
                     DateTime = End.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss"),
-                    TimeZone = App.UserTimeZone.DisplayName
+                    TimeZone = timeZoneString
                 }
             };
 

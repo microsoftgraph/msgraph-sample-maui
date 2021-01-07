@@ -37,9 +37,13 @@ namespace GraphTutorial
                 new QueryOption("endDateTime", endOfWeek.ToString("o"))
             };
 
+            var timeZoneString =
+                Xamarin.Forms.Device.RuntimePlatform == Xamarin.Forms.Device.UWP ?
+                    App.UserTimeZone.StandardName : App.UserTimeZone.DisplayName;
+
             // Get the events
             var events = await App.GraphClient.Me.CalendarView.Request(queryOptions)
-                .Header("Prefer", $"outlook.timezone=\"{App.UserTimeZone.DisplayName}\"")
+                .Header("Prefer", $"outlook.timezone=\"{timeZoneString}\"")
                 .Select(e => new 
                 { 
                     e.Subject, 
