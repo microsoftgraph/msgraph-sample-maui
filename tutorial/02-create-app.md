@@ -106,7 +106,7 @@ In this section, you'll change the application's main page to a [Master-Detail p
 
 1. Open the **MainPage.xaml** file in the **GraphTutorial** project and replace its contents with the following.
 
-    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/MainPage.xaml":::
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/MainPage.xaml" id="MainPageXamlSnippet":::
 
 #### Implement the menu
 
@@ -122,7 +122,7 @@ In this section, you'll change the application's main page to a [Master-Detail p
 
 1. Open the **MenuPage.xaml** file and replace its contents with the following.
 
-    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/MenuPage.xaml":::
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/MenuPage.xaml" id="MenuPageXamlSnippet":::
 
 1. Expand **MenuPage.xaml** in **Solution Explorer** and open the **MenuPage.xaml.cs** file. Replace its contents with the following.
 
@@ -135,7 +135,7 @@ In this section, you'll change the application's main page to a [Master-Detail p
 
 1. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `WelcomePage`. Select **Add**. Open the **WelcomePage.xaml** file and replace its contents with the following.
 
-    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/WelcomePage.xaml":::
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/WelcomePage.xaml" id="WelcomePageXamlSnippet":::
 
 1. Expand **WelcomePage.xaml** in **Solution Explorer** and open the **WelcomePage.xaml.cs** file. Add the following function to the `WelcomePage` class.
 

@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+
 using Microsoft.Graph;
 using Newtonsoft.Json;
 using System;
@@ -44,12 +45,12 @@ namespace GraphTutorial
             // Get the events
             var events = await App.GraphClient.Me.CalendarView.Request(queryOptions)
                 .Header("Prefer", $"outlook.timezone=\"{timeZoneString}\"")
-                .Select(e => new 
-                { 
-                    e.Subject, 
-                    e.Organizer, 
-                    e.Start, 
-                    e.End 
+                .Select(e => new
+                {
+                    e.Subject,
+                    e.Organizer,
+                    e.Start,
+                    e.End
                 })
                 .OrderBy("start/DateTime")
                 .Top(50)

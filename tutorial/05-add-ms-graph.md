@@ -93,7 +93,7 @@ Start by creating a [binding value converter](/xamarin/xamarin-forms/xaml/xaml-b
 
 1. Replace the entire contents of **CalendarPage.xaml** with the following.
 
-    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/CalendarPage.xaml":::
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/CalendarPage.xaml" id="CalendarPageXamlSnippet":::
 
     This replaces the `Editor` with a `ListView`. The `DataTemplate` used to render each item uses the `GraphDateTimeTimeZoneConverter` to convert the `Start` and `End` properties of the event to a string.
 
