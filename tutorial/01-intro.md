@@ -19,7 +19,7 @@ You should also have either a personal Microsoft account with a mailbox on Outlo
 - You can [sign up for the Office 365 Developer Program](https://developer.microsoft.com/office/dev-program) to get a free Office 365 subscription.
 
 > [!NOTE]
-> This tutorial was written with Visual Studio 2019 version 16.5.2 and Visual Studio for Mac version 8.5.1. Both machines have the Android SDK Platform 28 installed. The steps in this guide may work with other versions, but that has not been tested.
+> This tutorial was written with Visual Studio 2019 version 16.8.3 and Visual Studio for Mac version 8.5.1. Both machines have the Android SDK Platform 28 installed. The steps in this guide may work with other versions, but that has not been tested.
 
 ## Feedback
 

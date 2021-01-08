@@ -24,6 +24,7 @@ In this exercise you will extend the application from the previous exercise to s
     using System.Diagnostics;
     using System.Linq;
     using System.Net.Http.Headers;
+    using TimeZoneConverter;
     ```
 
 1. Change the **App** class declaration line to resolve the name conflict for **Application**.

@@ -7,7 +7,8 @@ namespace GraphTutorial.Models
     public enum MenuItemType
     {
         Welcome,
-        Calendar
+        Calendar,
+        NewEvent
     }
 
     public class NavMenuItem

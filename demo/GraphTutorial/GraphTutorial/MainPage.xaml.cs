@@ -41,6 +41,9 @@ namespace GraphTutorial
                     case (int)MenuItemType.Calendar:
                         MenuPages.Add(id, new NavigationPage(new CalendarPage()));
                         break;
+                    case (int)MenuItemType.NewEvent:
+                        MenuPages.Add(id, new NavigationPage(new NewEventPage()));
+                        break;
                 }
             }
 

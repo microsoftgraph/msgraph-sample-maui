@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
+
 using Microsoft.Graph;
 using Newtonsoft.Json;
 using System;
@@ -27,20 +28,48 @@ namespace GraphTutorial
         {
             base.OnAppearing();
 
+            // Get start and end of week in user's time zone
+            var startOfWeek = GetUtcStartOfWeekInTimeZone(DateTime.Today, App.UserTimeZone);
+            var endOfWeek = startOfWeek.AddDays(7);
+
+            var queryOptions = new List<QueryOption>
+            {
+                new QueryOption("startDateTime", startOfWeek.ToString("o")),
+                new QueryOption("endDateTime", endOfWeek.ToString("o"))
+            };
+
+            var timeZoneString =
+                Xamarin.Forms.Device.RuntimePlatform == Xamarin.Forms.Device.UWP ?
+                    App.UserTimeZone.StandardName : App.UserTimeZone.DisplayName;
+
             // Get the events
-            var events = await App.GraphClient.Me.Events.Request()
-                .Select(e => new 
-                { 
-                    e.Subject, 
-                    e.Organizer, 
-                    e.Start, 
-                    e.End 
+            var events = await App.GraphClient.Me.CalendarView.Request(queryOptions)
+                .Header("Prefer", $"outlook.timezone=\"{timeZoneString}\"")
+                .Select(e => new
+                {
+                    e.Subject,
+                    e.Organizer,
+                    e.Start,
+                    e.End
                 })
-                .OrderBy("createdDateTime DESC")
+                .OrderBy("start/DateTime")
+                .Top(50)
                 .GetAsync();
 
             // Add the events to the list view
             CalendarList.ItemsSource = events.CurrentPage.ToList();
+        }
+
+        private static DateTime GetUtcStartOfWeekInTimeZone(DateTime today, TimeZoneInfo timeZone)
+        {
+            // Assumes Sunday as first day of week
+            int diff = System.DayOfWeek.Sunday - today.DayOfWeek;
+
+            // create date as unspecified kind
+            var unspecifiedStart = DateTime.SpecifyKind(today.AddDays(diff), DateTimeKind.Unspecified);
+
+            // convert to UTC
+            return TimeZoneInfo.ConvertTimeToUtc(unspecifiedStart, timeZone);
         }
     }
 }

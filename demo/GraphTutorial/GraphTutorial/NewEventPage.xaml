@@ -1,0 +1,54 @@
+﻿<!-- Copyright (c) Microsoft Corporation.
+     Licensed under the MIT License. -->
+
+<!-- <NewEventPageXamlSnippet> -->
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GraphTutorial.NewEventPage">
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <ScrollView
+                AbsoluteLayout.LayoutBounds="0,0,1,1"
+                AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Spacing="10" Margin="10">
+                    <Label Text="Subject" />
+                    <Entry Text="{Binding Subject}" />
+                    <Label Text="Attendees" />
+                    <Entry Text="{Binding Attendees}" Placeholder="Add multiple email addresses separated by a semicolon (';')" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Label Text="Start" />
+                        <DatePicker Grid.Row="2" Date="{Binding StartDate, Mode=TwoWay}" />
+                        <TimePicker Grid.Row="2" Grid.Column="2" Time="{Binding StartTime}" />
+                        <Label Text="End" Grid.Row="3" />
+                        <DatePicker Grid.Row="4" Date="{Binding EndDate, Mode=TwoWay}" />
+                        <TimePicker Grid.Row="4" Grid.Column="2" Time="{Binding EndTime}" />
+                    </Grid>
+                    <Label Text="Body" />
+                    <Editor HeightRequest="200" Text="{Binding Body}" />
+                    <Button Text="Create" Clicked="CreateEvent" IsEnabled="{Binding IsValid}" />
+                </StackLayout>
+            </ScrollView>
+            <StackLayout
+                AbsoluteLayout.LayoutBounds="0,0,1,1"
+                AbsoluteLayout.LayoutFlags="All"
+                IsVisible="{Binding IsWorking}">
+                <ActivityIndicator
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="CenterAndExpand"
+                    IsRunning="{Binding IsWorking}" />
+            </StackLayout>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>
+<!-- </NewEventPageXamlSnippet> -->

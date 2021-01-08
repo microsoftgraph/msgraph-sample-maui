@@ -23,16 +23,18 @@ Before moving on, install some additional NuGet packages that you will use later
 
 - [Microsoft.Identity.Client](https://www.nuget.org/packages/Microsoft.Identity.Client/) to handle Azure AD authentication and token management.
 - [Microsoft.Graph](https://www.nuget.org/packages/Microsoft.Graph/) for making calls to the Microsoft Graph.
+- [TimeZoneConverter](https://www.nuget.org/packages/TimeZoneConverter/) for handling time zones cross-platform.
 
 1. Select **Tools > NuGet Package Manager > Package Manager Console**.
 
 1. In the Package Manager Console, enter the following commands.
 
     ```Powershell
-    Install-Package Microsoft.Identity.Client -Version 4.10.0 -Project GraphTutorial
-    Install-Package Microsoft.Identity.Client -Version 4.10.0 -Project GraphTutorial.Android
-    Install-Package Microsoft.Identity.Client -Version 4.10.0 -Project GraphTutorial.iOS
-    Install-Package Microsoft.Graph -Version 3.0.1 -Project GraphTutorial
+    Install-Package Microsoft.Identity.Client -Version 4.24.0 -Project GraphTutorial
+    Install-Package Microsoft.Identity.Client -Version 4.24.0 -Project GraphTutorial.Android
+    Install-Package Microsoft.Identity.Client -Version 4.24.0 -Project GraphTutorial.iOS
+    Install-Package Microsoft.Graph -Version 3.21.0 -Project GraphTutorial
+    Install-Package TimeZoneConverter -Version 3.3.0 -Project GraphTutorial
     ```
 
 ## Design the app
@@ -104,7 +106,7 @@ In this section, you'll change the application's main page to a [Master-Detail p
 
 1. Open the **MainPage.xaml** file in the **GraphTutorial** project and replace its contents with the following.
 
-    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/MainPage.xaml":::
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/MainPage.xaml" id="MainPageXamlSnippet":::
 
 #### Implement the menu
 
@@ -120,7 +122,7 @@ In this section, you'll change the application's main page to a [Master-Detail p
 
 1. Open the **MenuPage.xaml** file and replace its contents with the following.
 
-    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/MenuPage.xaml":::
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/MenuPage.xaml" id="MenuPageXamlSnippet":::
 
 1. Expand **MenuPage.xaml** in **Solution Explorer** and open the **MenuPage.xaml.cs** file. Replace its contents with the following.
 
@@ -133,17 +135,19 @@ In this section, you'll change the application's main page to a [Master-Detail p
 
 1. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `WelcomePage`. Select **Add**. Open the **WelcomePage.xaml** file and replace its contents with the following.
 
-    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/WelcomePage.xaml":::
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/WelcomePage.xaml" id="WelcomePageXamlSnippet":::
 
 1. Expand **WelcomePage.xaml** in **Solution Explorer** and open the **WelcomePage.xaml.cs** file. Add the following function to the `WelcomePage` class.
 
     :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/WelcomePage.xaml.cs" id="OnSignInSnippet":::
 
-#### Add calendar page
+#### Add calendar and new event pages
 
-Now add a calendar page. This will just be a placeholder for now.
+Now add a calendar page and a new event page. These will just be placeholders for now.
 
 1. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `CalendarPage`. Select **Add**.
+
+1. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `NewEventPage`. Select **Add**.
 
 #### Update MainPage code-behind
 

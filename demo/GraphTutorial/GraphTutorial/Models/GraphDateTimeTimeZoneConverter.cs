@@ -15,17 +15,9 @@ namespace GraphTutorial.Models
         {
             if (value is DateTimeTimeZone date)
             {
-                // Resolve the time zone
-                var timezone = TimeZoneInfo.FindSystemTimeZoneById(date.TimeZone);
-                // Parse method assumes local time, which may not be the case
-                var parsedDateAsLocal = DateTimeOffset.Parse(date.DateTime);
-                // Determine the offset from UTC time for the specific date
-                // Making this call adjusts for DST as appropriate
-                var tzOffset = timezone.GetUtcOffset(parsedDateAsLocal.DateTime);
-                // Create a new DateTimeOffset with the specific offset from UTC
-                var correctedDate = new DateTimeOffset(parsedDateAsLocal.DateTime, tzOffset);
+                var parsedDateAs = DateTimeOffset.Parse(date.DateTime);
                 // Return the local date time string
-                return $"{correctedDate.LocalDateTime.ToShortDateString()} {correctedDate.LocalDateTime.ToShortTimeString()}";
+                return $"{parsedDateAs.LocalDateTime.ToShortDateString()} {parsedDateAs.LocalDateTime.ToShortTimeString()}";
             }
 
             return string.Empty;

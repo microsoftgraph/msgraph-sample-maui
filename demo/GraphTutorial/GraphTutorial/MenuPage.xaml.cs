@@ -29,7 +29,8 @@ namespace GraphTutorial
             menuItems = new List<NavMenuItem>
             {
                 new NavMenuItem {Id = MenuItemType.Welcome, Title="Home" },
-                new NavMenuItem {Id = MenuItemType.Calendar, Title="Calendar" }
+                new NavMenuItem {Id = MenuItemType.Calendar, Title="Calendar" },
+                new NavMenuItem {Id = MenuItemType.NewEvent, Title="New event" }
             };
             ListViewMenu.ItemsSource = menuItems;
 
