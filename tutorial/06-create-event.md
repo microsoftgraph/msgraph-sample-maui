@@ -15,6 +15,7 @@ In this section you will add the ability to create events on the user's calendar
 1. Add the **INotifyPropertyChange** interface to the **NewEventPage** class. Replace the existing class declaration with the following.
 
     ```csharp
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NewEventPage : ContentPage, INotifyPropertyChanged
     {
         public NewEventPage()
