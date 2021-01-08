@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,15 +10,17 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+// <UsingStatementsSnippet>
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Microsoft.Graph;
+// </UsingStatementsSnippet>
 
 namespace GraphTutorial
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NewEventPage : ContentPage, INotifyPropertyChanged
     {
+        // <PropertiesSnippet>
         // Value of the Subject text box
         private string _subject = "";
         public string Subject
@@ -161,6 +166,7 @@ namespace GraphTutorial
                 OnPropertyChanged();
             }
         }
+        // </PropertiesSnippet>
 
         public NewEventPage()
         {
@@ -168,6 +174,7 @@ namespace GraphTutorial
             BindingContext = this;
         }
 
+        // <CreateEventSnippet>
         private async void CreateEvent(object sender, EventArgs e)
         {
             IsWorking = true;
@@ -207,7 +214,7 @@ namespace GraphTutorial
                 var attendeeList = new List<Attendee>();
 
                 // Treat any unrecognized text as a list of email addresses
-                var emails = Attendees.Split(new[] { ';', ',', ' ' }, 
+                var emails = Attendees.Split(new[] { ';', ',', ' ' },
                     StringSplitOptions.RemoveEmptyEntries);
 
                 foreach (var email in emails)
@@ -243,5 +250,6 @@ namespace GraphTutorial
 
             IsWorking = false;
         }
+        // </CreateEventSnippet>
     }
 }
