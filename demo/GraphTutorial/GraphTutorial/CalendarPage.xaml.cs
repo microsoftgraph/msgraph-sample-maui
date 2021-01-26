@@ -60,6 +60,7 @@ namespace GraphTutorial
             CalendarList.ItemsSource = events.CurrentPage.ToList();
         }
 
+        // <GetStartOfWeekSnippet>
         private static DateTime GetUtcStartOfWeekInTimeZone(DateTime today, TimeZoneInfo timeZone)
         {
             // Assumes Sunday as first day of week
@@ -71,5 +72,6 @@ namespace GraphTutorial
             // convert to UTC
             return TimeZoneInfo.ConvertTimeToUtc(unspecifiedStart, timeZone);
         }
+        // </GetStartOfWeekSnippet>
     }
 }

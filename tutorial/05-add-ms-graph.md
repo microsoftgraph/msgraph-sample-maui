@@ -32,6 +32,10 @@ In this exercise you will incorporate the Microsoft Graph into the application. 
     using System.ComponentModel;
     ```
 
+1. Add the following function to the `CalendarPage` class to get the start of the current week in the user's time zone.
+
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/CalendarPage.xaml.cs" id="GetStartOfWeekSnippet":::
+
 1. Add the following function to the `CalendarPage` class to get the user's events and display the JSON response.
 
     ```csharp
