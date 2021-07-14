@@ -27,7 +27,7 @@ In this exercise you will incorporate the Microsoft Graph into the application. 
 
     ```csharp
     using Microsoft.Graph;
-    using Newtonsoft.Json;
+
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     ```
@@ -53,9 +53,13 @@ In this exercise you will incorporate the Microsoft Graph into the application. 
             new QueryOption("endDateTime", endOfWeek.ToString("o"))
         };
 
+        var timeZoneString =
+            Xamarin.Forms.Device.RuntimePlatform == Xamarin.Forms.Device.UWP ?
+                App.UserTimeZone.StandardName : App.UserTimeZone.DisplayName;
+
         // Get the events
         var events = await App.GraphClient.Me.CalendarView.Request(queryOptions)
-            .Header("Prefer", $"outlook.timezone=\"{App.UserTimeZone.DisplayName}\"")
+            .Header("Prefer", $"outlook.timezone=\"{timeZoneString}\"")
             .Select(e => new
             {
                 e.Subject,
@@ -68,7 +72,7 @@ In this exercise you will incorporate the Microsoft Graph into the application. 
             .GetAsync();
 
         // Temporary
-        JSONResponse.Text = JsonConvert.SerializeObject(events.CurrentPage, Formatting.Indented);
+        JSONResponse.Text = App.GraphClient.HttpProvider.Serializer.SerializeObject(events.CurrentPage);
     }
     ```
 
@@ -97,7 +101,7 @@ Start by creating a [binding value converter](/xamarin/xamarin-forms/xaml/xaml-b
 
 1. Replace the entire contents of **CalendarPage.xaml** with the following.
 
-    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/CalendarPage.xaml" id="CalendarPageXamlSnippet":::
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/CalendarPage.xaml":::
 
     This replaces the `Editor` with a `ListView`. The `DataTemplate` used to render each item uses the `GraphDateTimeTimeZoneConverter` to convert the `Start` and `End` properties of the event to a string.
 

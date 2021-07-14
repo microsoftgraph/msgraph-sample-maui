@@ -53,7 +53,7 @@ In this exercise you will extend the application from the previous exercise to s
 
 ### Update Android project to enable sign-in
 
-When used in a Xamarin Android project, the Microsoft Authentication Library has a few [requirements specific to Android](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/Xamarin-Android-specifics).
+When used in a Xamarin Android project, the Microsoft Authentication Library has a few [requirements specific to Android](/azure/active-directory/develop/msal-net-xamarin-android-considerations).
 
 1. In **GraphTutorial.Android** project, expand the **Properties** folder, then open **AndroidManifest.xml**. If you're using Visual Studio for Mac, Control click **AndroidManifest.xml** and choose **Open With**, then **Source Code Editor**. Replace the entire contents with the following.
 
@@ -81,7 +81,7 @@ When used in a Xamarin Android project, the Microsoft Authentication Library has
 > [!IMPORTANT]
 > Because MSAL requires use of an Entitlements.plist file, you must configure Visual Studio with your Apple developer account to enable provisioning. If you are running this tutorial in the iPhone simulator, you need to add **Entitlements.plist** in the **Custom Entitlements** field in **GraphTutorial.iOS** project's settings, **Build->iOS Bundle Signing**. For more information, see [Device provisioning for Xamarin.iOS](/xamarin/ios/get-started/installation/device-provisioning).
 
-When used in a Xamarin iOS project, the Microsoft Authentication Library has a few [requirements specific to iOS](https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/Xamarin-iOS-specifics).
+When used in a Xamarin iOS project, the Microsoft Authentication Library has a few [requirements specific to iOS](/azure/active-directory/develop/msal-net-xamarin-ios-considerations).
 
 1. In Solution Explorer, expand the **GraphTutorial.iOS** project, then open the **Entitlements.plist** file.
 
