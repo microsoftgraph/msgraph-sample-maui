@@ -1,9 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using GraphTutorial.Models;
-using Microsoft.Identity.Client;
-using Microsoft.Graph;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -12,9 +9,12 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
+using GraphTutorial.Models;
+using Microsoft.Identity.Client;
+using Microsoft.Graph;
+using TimeZoneConverter;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using TimeZoneConverter;
 
 namespace GraphTutorial
 {
@@ -234,7 +234,8 @@ namespace GraphTutorial
             try
             {
                 UserTimeZone = TZConvert.GetTimeZoneInfo(user.MailboxSettings.TimeZone);
-            } catch
+            }
+            catch
             {
                 // Default to local time zone
                 UserTimeZone = TimeZoneInfo.Local;

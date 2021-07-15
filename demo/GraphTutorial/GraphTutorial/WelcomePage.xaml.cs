@@ -1,7 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +20,7 @@ namespace GraphTutorial
         // <OnSignInSnippet>
         private void OnSignIn(object sender, EventArgs e)
         {
-            (App.Current.MainPage as MasterDetailPage).IsPresented = true;
+            (App.Current.MainPage as FlyoutPage).IsPresented = true;
         }
         // </OnSignInSnippet>
     }

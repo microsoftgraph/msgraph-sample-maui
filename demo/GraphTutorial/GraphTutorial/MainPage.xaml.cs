@@ -14,7 +14,7 @@ using GraphTutorial.Models;
 
 namespace GraphTutorial
 {
-    public partial class MainPage : MasterDetailPage
+    public partial class MainPage : FlyoutPage
     {
         Dictionary<int, NavigationPage> MenuPages = new Dictionary<int, NavigationPage>();
 
@@ -22,7 +22,7 @@ namespace GraphTutorial
         {
             InitializeComponent();
 
-            MasterBehavior = MasterBehavior.Popover;
+            FlyoutLayoutBehavior = FlyoutLayoutBehavior.Popover;
 
             // Load the welcome page at start
             MenuPages.Add((int)MenuItemType.Welcome, (NavigationPage)Detail);

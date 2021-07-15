@@ -30,11 +30,11 @@ Before moving on, install some additional NuGet packages that you will use later
 1. In the Package Manager Console, enter the following commands.
 
     ```Powershell
-    Install-Package Microsoft.Identity.Client -Version 4.24.0 -Project GraphTutorial
-    Install-Package Microsoft.Identity.Client -Version 4.24.0 -Project GraphTutorial.Android
-    Install-Package Microsoft.Identity.Client -Version 4.24.0 -Project GraphTutorial.iOS
-    Install-Package Microsoft.Graph -Version 3.21.0 -Project GraphTutorial
-    Install-Package TimeZoneConverter -Version 3.3.0 -Project GraphTutorial
+    Install-Package Microsoft.Identity.Client -Version 4.34.0 -Project GraphTutorial
+    Install-Package Microsoft.Identity.Client -Version 4.34.0 -Project GraphTutorial.Android
+    Install-Package Microsoft.Identity.Client -Version 4.34.0 -Project GraphTutorial.iOS
+    Install-Package Microsoft.Graph -Version 4.0.0 -Project GraphTutorial
+    Install-Package TimeZoneConverter -Project GraphTutorial
     ```
 
 ## Design the app
@@ -102,11 +102,11 @@ Start by updating the `App` class to add variables to track the authentication s
 
 ### App navigation
 
-In this section, you'll change the application's main page to a [Master-Detail page](/xamarin/xamarin-forms/app-fundamentals/navigation/master-detail-page). This will provide a navigation menu to switch between view in the app.
+In this section, you'll change the application's main page to a [FlyoutPage](/xamarin/xamarin-forms/app-fundamentals/navigation/flyoutpage). This will provide a navigation menu to switch between view in the app.
 
 1. Open the **MainPage.xaml** file in the **GraphTutorial** project and replace its contents with the following.
 
-    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/MainPage.xaml" id="MainPageXamlSnippet":::
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/MainPage.xaml":::
 
 #### Implement the menu
 
@@ -122,7 +122,7 @@ In this section, you'll change the application's main page to a [Master-Detail p
 
 1. Open the **MenuPage.xaml** file and replace its contents with the following.
 
-    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/MenuPage.xaml" id="MenuPageXamlSnippet":::
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/MenuPage.xaml":::
 
 1. Expand **MenuPage.xaml** in **Solution Explorer** and open the **MenuPage.xaml.cs** file. Replace its contents with the following.
 
@@ -135,7 +135,7 @@ In this section, you'll change the application's main page to a [Master-Detail p
 
 1. Right-click the **GraphTutorial** project and select **Add**, then **New Item...**. Choose **Content Page** and name the page `WelcomePage`. Select **Add**. Open the **WelcomePage.xaml** file and replace its contents with the following.
 
-    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/WelcomePage.xaml" id="WelcomePageXamlSnippet":::
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/WelcomePage.xaml":::
 
 1. Expand **WelcomePage.xaml** in **Solution Explorer** and open the **WelcomePage.xaml.cs** file. Add the following function to the `WelcomePage` class.
 

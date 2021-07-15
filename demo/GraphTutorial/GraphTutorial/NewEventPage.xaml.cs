@@ -1,25 +1,24 @@
-﻿// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.Graph;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
-// <UsingStatementsSnippet>
-using System.ComponentModel;
-using Microsoft.Graph;
-// </UsingStatementsSnippet>
 
 namespace GraphTutorial
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NewEventPage : ContentPage, INotifyPropertyChanged
     {
+        public NewEventPage()
+        {
+            InitializeComponent();
+            BindingContext = this;
+        }
+
         // <PropertiesSnippet>
         // Value of the Subject text box
         private string _subject = "";
@@ -167,12 +166,6 @@ namespace GraphTutorial
             }
         }
         // </PropertiesSnippet>
-
-        public NewEventPage()
-        {
-            InitializeComponent();
-            BindingContext = this;
-        }
 
         // <CreateEventSnippet>
         private async void CreateEvent(object sender, EventArgs e)

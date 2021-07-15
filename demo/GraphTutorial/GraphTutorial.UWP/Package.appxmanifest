@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="413915c7-7002-417b-b66b-88e7ef920796"
-    Publisher="CN=48b7f80f-81c1-43c4-bd92-d7a3877c9a8f"
+    Name="3a2c0b5b-32c9-4e2e-bf23-460b2ae1fbb3"
+    Publisher="CN=3f52d8b0-1a3c-4c8d-9534-2e9b936b4983"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="ec0cc741-fd3e-485c-81be-68815c480690" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>GraphTutorial.UWP</DisplayName>
-    <PublisherDisplayName>48b7f80f-81c1-43c4-bd92-d7a3877c9a8f</PublisherDisplayName>
+    <PublisherDisplayName>3f52d8b0-1a3c-4c8d-9534-2e9b936b4983</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

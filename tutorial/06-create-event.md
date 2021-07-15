@@ -2,15 +2,16 @@
 
 In this section you will add the ability to create events on the user's calendar.
 
-1. Add a new page for the new event view. Right-click the **GraphTutorial** project in Solution Explorer and select **Add > New Item...**. Choose **Blank Page**, enter `NewEventPage.xaml` in the **Name** field, and select **Add**.
-
 1. Open **NewEventPage.xaml** and replace its contents with the following.
 
-    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/NewEventPage.xaml" id="NewEventPageXamlSnippet":::
+    :::code language="xaml" source="../demo/GraphTutorial/GraphTutorial/NewEventPage.xaml":::
 
 1. Open **NewEventPage.xaml.cs** and add the following `using` statements to the top of the file.
 
-    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/NewEventPage.xaml.cs" id="UsingStatementsSnippet":::
+    ```csharp
+    using System.ComponentModel;
+    using Microsoft.Graph;
+    ```
 
 1. Add the **INotifyPropertyChange** interface to the **NewEventPage** class. Replace the existing class declaration with the following.
 
