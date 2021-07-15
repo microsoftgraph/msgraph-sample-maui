@@ -6,7 +6,7 @@ In this exercise you will extend the application from the previous exercise to s
 
 1. Open the **OAuthSettings.cs** file and replace its contents with the following.
 
-    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/Models/OAuthSettings.cs.example":::
+    :::code language="csharp" source="../demo/GraphTutorial/GraphTutorial/Models/OAuthSettings.example.cs":::
 
 1. Replace `YOUR_APP_ID_HERE` with the application ID from your app registration.
 
