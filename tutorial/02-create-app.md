@@ -30,10 +30,10 @@ Before moving on, install some additional NuGet packages that you will use later
 1. In the Package Manager Console, enter the following commands.
 
     ```Powershell
-    Install-Package Microsoft.Identity.Client -Version 4.34.0 -Project GraphTutorial
-    Install-Package Microsoft.Identity.Client -Version 4.34.0 -Project GraphTutorial.Android
-    Install-Package Microsoft.Identity.Client -Version 4.34.0 -Project GraphTutorial.iOS
-    Install-Package Microsoft.Graph -Version 4.0.0 -Project GraphTutorial
+    Install-Package Microsoft.Identity.Client -Version 4.35.1 -Project GraphTutorial
+    Install-Package Microsoft.Identity.Client -Version 4.35.1 -Project GraphTutorial.Android
+    Install-Package Microsoft.Identity.Client -Version 4.35.1 -Project GraphTutorial.iOS
+    Install-Package Microsoft.Graph -Version 4.1.0 -Project GraphTutorial
     Install-Package TimeZoneConverter -Project GraphTutorial
     ```
 
