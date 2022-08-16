@@ -49,7 +49,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Azure.Identity" Version="1.6.1" />
 	  <PackageReference Include="Microsoft.Graph" Version="4.36.0" />
+	  <PackageReference Include="TimeZoneConverter" Version="5.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Services\" />
 	</ItemGroup>
 
 </Project>
