@@ -333,5 +333,6 @@ ASALocalRun/
 .DS_Store
 
 .vscode/
+appSettings.Development.json
 OAuthSettings.cs
 XamarinQuickStart.zip

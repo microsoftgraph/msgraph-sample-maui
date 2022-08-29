@@ -49,13 +49,44 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Azure.Identity" Version="1.6.1" />
+	  <None Remove="appSettings.Development.json" />
+	  <None Remove="appSettings.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="appSettings*.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="CommunityToolkit.Maui" Version="1.2.0" />
+	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
 	  <PackageReference Include="Microsoft.Graph" Version="4.36.0" />
+	  <PackageReference Include="Microsoft.Identity.Client" Version="4.46.0" />
+	  <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.23.0" />
 	  <PackageReference Include="TimeZoneConverter" Version="5.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Services\" />
+	  <MauiXaml Update="Views\CalendarView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\FlyoutHeaderView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\NewEventView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\WelcomeView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Views\WelcomeView.xaml.cs">
+	    <DependentUpon>WelcomeView.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

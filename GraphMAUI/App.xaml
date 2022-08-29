@@ -9,6 +9,10 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="VerticalStackLayout">
+                <Setter Property="Padding" Value="10,30" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

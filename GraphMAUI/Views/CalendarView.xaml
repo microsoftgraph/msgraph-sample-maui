@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright (c) Microsoft Corporation.
+     Licensed under the MIT License.-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:GraphMAUI.ViewModels"
+             xmlns:converters="clr-namespace:GraphMAUI.Converters"
+             xmlns:graph="clr-namespace:Microsoft.Graph;assembly=Microsoft.Graph"
+             x:Class="GraphMAUI.Views.CalendarView"
+             Title="Calendar" Routing.Route="Calendar"
+             x:DataType="viewmodels:CalendarViewModel">
+    <ContentPage.Resources>
+        <converters:GraphDateTimeTimeZoneConverter x:Key="DateConverter" />
+    </ContentPage.Resources>
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" 
+                 Command="{Binding RefreshCommand}"
+                 Margin="20">
+        <Grid RowDefinitions="Auto,Auto,*">
+            <Label Text="Calendar"
+                   FontSize="Large"
+                   Margin="0,10"
+                   Grid.Row="0"/>
+            <Button Text="New event"
+                    Command="{Binding NewEventCommand}"
+                    Margin="0,0,0,10"
+                    HorizontalOptions="Start"
+                    Grid.Row="1"></Button>
+            <ScrollView Grid.Row="2">
+            <ListView ItemsSource="{Binding Events}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell x:DataType="graph:Event">
+                            <StackLayout Margin="0,10">
+                                <Label Text="{Binding Subject}"
+                                       FontAttributes="Bold"
+                                       FontSize="Medium" />
+                                <Label Text="{Binding Organizer.EmailAddress.Name}"
+                                       FontSize="Small" />
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding Start, Converter={StaticResource DateConverter}}"
+                                           FontSize="Micro" />
+                                    <Label Text="to"
+                                           FontSize="Micro"
+                                           Margin="10,0"/>
+                                    <Label Text="{Binding End, Converter={StaticResource DateConverter}}"
+                                           FontSize="Micro" />
+                                </StackLayout>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollView>
+        </Grid>
+    </RefreshView>
+</ContentPage>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright (c) Microsoft Corporation.
+     Licensed under the MIT License.-->
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:GraphMAUI.ViewModels"
+             x:Class="GraphMAUI.Views.FlyoutHeaderView"
+             x:DataType="viewmodels:AppShellViewModel">
+    <VerticalStackLayout IsVisible="{Binding IsSignedIn}">
+        <Image Source="{Binding UserPhoto}"
+               HeightRequest="150"
+               HorizontalOptions="Center"
+               Margin="0,20,0,10" />
+        <Label Text="{Binding UserName}"
+               HorizontalOptions="Center"
+               FontAttributes="Bold"
+               FontSize="Small" />
+        <Label Text="{Binding UserEmail}"
+               HorizontalOptions="Center"
+               FontAttributes="Italic" />
+    </VerticalStackLayout>
+</ContentView>
