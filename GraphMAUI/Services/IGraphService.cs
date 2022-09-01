@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using Microsoft.Graph;
+using Microsoft.Graph.Models;
 
 namespace GraphMAUI.Services
 {
@@ -31,7 +31,7 @@ namespace GraphMAUI.Services
         /// <param name="start">The start of the time period</param>
         /// <param name="end">The end of the time period</param>
         /// <param name="timeZone">The time zone to return date/time values in</param>
-        public Task<IUserCalendarViewCollectionPage> GetCalendarForDateTimeRangeAsync(DateTime start, DateTime end, TimeZoneInfo timeZone);
+        public Task<EventCollectionResponse> GetCalendarForDateTimeRangeAsync(DateTime start, DateTime end, TimeZoneInfo timeZone);
 
         /// <summary>
         /// Create an event on the authenticated user's calendar

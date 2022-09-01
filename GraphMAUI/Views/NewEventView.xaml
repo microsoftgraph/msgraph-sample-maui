@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright (c) Microsoft Corporation.
      Licensed under the MIT License.-->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -16,7 +16,8 @@
                 <Label Text="Attendees" />
                 <Entry Text="{Binding Attendees}" 
                        Placeholder="Add multiple email addresses separated by a semicolon (';')" />
-                <Grid RowSpacing="10">
+                <Grid RowSpacing="10"
+                      ColumnSpacing="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
@@ -42,9 +43,12 @@
                                 Time="{Binding EndTime}" />
                 </Grid>
                 <Label Text="Body" />
-                <Editor HeightRequest="200" 
+                <Editor VerticalOptions="FillAndExpand"
+                        HorizontalOptions="FillAndExpand"
+                        Placeholder="Enter details about this event here"
                         Text="{Binding Body}" />
                 <Button Text="Create"
+                        Margin="0,10"
                         Command="{Binding CreateEventCommand}"/>
                 <Button Text="Cancel"
                         Command="{Binding CancelCommand}"/>

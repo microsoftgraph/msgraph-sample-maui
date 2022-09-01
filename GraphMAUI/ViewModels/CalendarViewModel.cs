@@ -4,7 +4,7 @@
 using System.Globalization;
 using System.Windows.Input;
 using GraphMAUI.Services;
-using Microsoft.Graph;
+using Microsoft.Graph.Models;
 
 namespace GraphMAUI.ViewModels
 {
@@ -94,7 +94,7 @@ namespace GraphMAUI.ViewModels
             var endOfWeek = startOfWeek.AddDays(7);
 
             var eventPage = await _graphService.GetCalendarForDateTimeRangeAsync(startOfWeek, endOfWeek, timeZone);
-            Events = eventPage.CurrentPage.ToList();
+            Events = eventPage.Value;
 
             IsRefreshing = false;
         }

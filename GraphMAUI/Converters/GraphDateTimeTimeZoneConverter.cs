@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using System.Globalization;
-using Microsoft.Graph;
+using Microsoft.Graph.Models;
 
 namespace GraphMAUI.Converters
 {

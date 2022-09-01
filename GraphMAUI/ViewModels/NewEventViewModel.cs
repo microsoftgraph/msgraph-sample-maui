@@ -4,6 +4,7 @@
 using System.Windows.Input;
 using GraphMAUI.Services;
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
 
 namespace GraphMAUI.ViewModels
 {
@@ -208,8 +209,9 @@ namespace GraphMAUI.ViewModels
         {
             IsBusy = true;
 
-            var timeZoneString = DeviceInfo.Current.Platform == DevicePlatform.WinUI ?
-                _userTimeZone.StandardName : _userTimeZone.DisplayName;
+            //var timeZoneString = DeviceInfo.Current.Platform == DevicePlatform.WinUI ?
+            //    _userTimeZone.StandardName : _userTimeZone.DisplayName;
+            var timeZoneString = _userTimeZone.StandardName;
 
             // Initialize the new event with required fields
             var newEvent = new Event

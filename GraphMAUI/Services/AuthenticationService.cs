@@ -6,6 +6,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using Microsoft.Identity.Client.Extensions.Msal;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Authentication;
 
 namespace GraphMAUI.Services
 {
@@ -82,6 +84,28 @@ namespace GraphMAUI.Services
         /// </summary>
         private async Task<IPublicClientApplication> InitializeMsalWithCache()
         {
+            // Initialize the PublicClientApplication
+            var builder = PublicClientApplicationBuilder
+                .Create(_settingsService.ClientId)
+                .WithRedirectUri(_settingsService.RedirectUri);
+
+            if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+            {
+                builder = builder.WithParentActivityOrWindow(() => Platform.CurrentActivity);
+            }
+
+            var pca = builder.Build();
+
+            if (DeviceInfo.Current.Platform == DevicePlatform.WinUI)
+            {
+                await RegisterMsalCache(pca.UserTokenCache);
+            }
+
+            return pca;
+        }
+
+        private async Task RegisterMsalCache(ITokenCache tokenCache)
+        {
             // Configure storage properties for cross-platform
             // See https://github.com/AzureAD/microsoft-authentication-extensions-for-dotnet/wiki/Cross-platform-Token-Cache
             var storageProperties =
@@ -97,20 +121,12 @@ namespace GraphMAUI.Services
                     _settingsService.KeyChainAccountName)
                 .Build();
 
-            // Initialize the PublicClientApplication
-            var pca = PublicClientApplicationBuilder
-                .Create(_settingsService.ClientId)
-                .WithRedirectUri(_settingsService.RedirectUri)
-                .Build();
-
             // Create a cache helper
             var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
 
             // Connect the PublicClientApplication's cache with the cacheHelper.
             // This will cause the cache to persist into secure storage on the device.
-            cacheHelper.RegisterCache(pca.UserTokenCache);
-
-            return pca;
+            cacheHelper.RegisterCache(tokenCache);
         }
 
         /// <summary>
@@ -200,18 +216,23 @@ namespace GraphMAUI.Services
             }
         }
 
-        public async Task AuthenticateRequestAsync(HttpRequestMessage request)
+        public async Task AuthenticateRequestAsync(
+            RequestInformation request,
+            Dictionary<string, object> additionalAuthenticationContext = null,
+            CancellationToken cancellationToken = default)
         {
-            // First try to get the token silently
-            var result = await GetTokenSilentlyAsync();
-            if (result == null)
+            if (request.URI.Host == "graph.microsoft.com")
             {
-                // If silent acquisition fails, try interactive
-                result = await GetTokenInteractivelyAsync();
-            }
+                // First try to get the token silently
+                var result = await GetTokenSilentlyAsync();
+                if (result == null)
+                {
+                    // If silent acquisition fails, try interactive
+                    result = await GetTokenInteractivelyAsync();
+                }
 
-            // Add the token in the Authorization header
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", result.AccessToken);
+                request.Headers.Add("Authorization", $"Bearer {result.AccessToken}");
+            }
         }
     }
 }

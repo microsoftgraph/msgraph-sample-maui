@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
 using TimeZoneConverter;
 
 namespace GraphMAUI.Services
@@ -23,43 +24,35 @@ namespace GraphMAUI.Services
         {
             var graphClient = _authenticationService.GraphClient;
 
-            return graphClient.Me.Events.Request().AddAsync(newEvent);
+            return graphClient.Me.Events.PostAsync(newEvent);
         }
 
-        public Task<IUserCalendarViewCollectionPage> GetCalendarForDateTimeRangeAsync(DateTime start, DateTime end, TimeZoneInfo timeZone)
+        public Task<EventCollectionResponse> GetCalendarForDateTimeRangeAsync(DateTime start, DateTime end, TimeZoneInfo timeZone)
         {
             var graphClient = _authenticationService.GraphClient;
 
-            var timeZoneString = DeviceInfo.Current.Platform == DevicePlatform.WinUI ?
-                timeZone.StandardName : timeZone.DisplayName;
-
-            // Calendar view API sets the time period using query parameters
-            // ?startDatetime={start}&endDateTime={end}
-            var queryOptions = new List<QueryOption>
-            {
-                new QueryOption("startDateTime", start.ToString("o")),
-                new QueryOption("endDateTime", end.ToString("o"))
-            };
+            //var timeZoneString = DeviceInfo.Current.Platform == DevicePlatform.WinUI ?
+            //    timeZone.StandardName : timeZone.DisplayName;
+            var timeZoneString = timeZone.StandardName;
 
             return graphClient.Me
                 .CalendarView
-                .Request(queryOptions)
-                // Set the "Prefer": "outlook.timezone=""" header so
-                // date/time values are returned in the chosen time zone
-                .Header("Prefer", $"outlook.timezone=\"{timeZoneString}\"")
-                // Request only the values we use
-                .Select(e => new
+                .GetAsync(requestConfiguration =>
                 {
-                    e.Subject,
-                    e.Organizer,
-                    e.Start,
-                    e.End
-                })
-                // Sort by the start time
-                .OrderBy("start/DateTime")
-                // Limit to 50 events
-                .Top(50)
-                .GetAsync();
+                    requestConfiguration.Headers.Add("Prefer",
+                        $"outlook.timezone=\"{timeZoneString}\"");
+                    // Calendar view API sets the time period using query parameters
+                    // ?startDatetime={start}&endDateTime={end}
+                    requestConfiguration.QueryParameters.StartDateTime =
+                        start.ToString("o");
+                    requestConfiguration.QueryParameters.EndDateTime =
+                        end.ToString("o");
+                    requestConfiguration.QueryParameters.Select =
+                        new[] { "subject", "organizer", "start", "end" };
+                    requestConfiguration.QueryParameters.Orderby =
+                        new[] { "start/DateTime" };
+                    requestConfiguration.QueryParameters.Top = 50;
+                });
         }
 
         public async Task<User> GetUserInfoAsync()
@@ -71,16 +64,12 @@ namespace GraphMAUI.Services
                 if (_user == null)
                 {
                     // Get the user, cache for subsequent calls
-                    _user = await graphClient.Me
-                        .Request()
-                        .Select(u => new
+                    _user = await graphClient.Me.GetAsync(
+                        requestConfiguration =>
                         {
-                            u.DisplayName,
-                            u.Mail,
-                            u.MailboxSettings,
-                            u.UserPrincipalName
-                        })
-                        .GetAsync();
+                            requestConfiguration.QueryParameters.Select =
+                                new[] { "displayName", "mail", "mailboxSettings", "userPrincipalName" }; 
+                        });
                 }
             }
             else
@@ -103,7 +92,6 @@ namespace GraphMAUI.Services
                     _userPhoto = await graphClient.Me
                         .Photo
                         .Content
-                        .Request()
                         .GetAsync();
                 }
             }
