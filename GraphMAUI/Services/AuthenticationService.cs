@@ -11,7 +11,7 @@ using Microsoft.Kiota.Abstractions.Authentication;
 
 namespace GraphMAUI.Services
 {
-    public class AuthenticationService : ObservableObject, IAuthenticationService, IAuthenticationProvider
+    public partial class AuthenticationService : ObservableObject, IAuthenticationService, IAuthenticationProvider
     {
         private Lazy<Task<IPublicClientApplication>> _pca;
         private string _userIdentifier = string.Empty;
@@ -89,45 +89,41 @@ namespace GraphMAUI.Services
                 .Create(_settingsService.ClientId)
                 .WithRedirectUri(_settingsService.RedirectUri);
 
-            if (DeviceInfo.Current.Platform == DevicePlatform.Android)
-            {
-                builder = builder.WithParentActivityOrWindow(() => Platform.CurrentActivity);
-            }
+            builder = AddParentActivityOrWindow(builder);
 
             var pca = builder.Build();
 
-            if (DeviceInfo.Current.Platform == DevicePlatform.WinUI)
-            {
-                await RegisterMsalCache(pca.UserTokenCache);
-            }
+            await RegisterMsalCacheAsync(pca.UserTokenCache);
 
             return pca;
         }
 
-        private async Task RegisterMsalCache(ITokenCache tokenCache)
-        {
-            // Configure storage properties for cross-platform
-            // See https://github.com/AzureAD/microsoft-authentication-extensions-for-dotnet/wiki/Cross-platform-Token-Cache
-            var storageProperties =
-                new StorageCreationPropertiesBuilder(_settingsService.CacheFileName, _settingsService.CacheDirectory)
-                .WithLinuxKeyring(
-                    _settingsService.LinuxKeyRingSchema,
-                    _settingsService.LinuxKeyRingCollection,
-                    _settingsService.LinuxKeyRingLabel,
-                    _settingsService.LinuxKeyRingAttr1,
-                    _settingsService.LinuxKeyRingAttr2)
-                .WithMacKeyChain(
-                    _settingsService.KeyChainServiceName,
-                    _settingsService.KeyChainAccountName)
-                .Build();
+        private partial PublicClientApplicationBuilder AddParentActivityOrWindow(PublicClientApplicationBuilder builder);
 
-            // Create a cache helper
-            var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
+        private partial Task RegisterMsalCacheAsync(ITokenCache tokenCache);
+        //{
+        //    // Configure storage properties for cross-platform
+        //    // See https://github.com/AzureAD/microsoft-authentication-extensions-for-dotnet/wiki/Cross-platform-Token-Cache
+        //    var storageProperties =
+        //        new StorageCreationPropertiesBuilder(_settingsService.CacheFileName, _settingsService.CacheDirectory)
+        //        .WithLinuxKeyring(
+        //            _settingsService.LinuxKeyRingSchema,
+        //            _settingsService.LinuxKeyRingCollection,
+        //            _settingsService.LinuxKeyRingLabel,
+        //            _settingsService.LinuxKeyRingAttr1,
+        //            _settingsService.LinuxKeyRingAttr2)
+        //        .WithMacKeyChain(
+        //            _settingsService.KeyChainServiceName,
+        //            _settingsService.KeyChainAccountName)
+        //        .Build();
 
-            // Connect the PublicClientApplication's cache with the cacheHelper.
-            // This will cause the cache to persist into secure storage on the device.
-            cacheHelper.RegisterCache(tokenCache);
-        }
+        //    // Create a cache helper
+        //    var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
+
+        //    // Connect the PublicClientApplication's cache with the cacheHelper.
+        //    // This will cause the cache to persist into secure storage on the device.
+        //    cacheHelper.RegisterCache(tokenCache);
+        //}
 
         /// <summary>
         /// Get the user account from the MSAL cache.
