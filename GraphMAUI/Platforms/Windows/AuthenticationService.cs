@@ -33,7 +33,7 @@ namespace GraphMAUI.Services
             cacheHelper.RegisterCache(tokenCache);
         }
 
-        private partial PublicClientApplicationBuilder AddParentActivityOrWindow(PublicClientApplicationBuilder builder)
+        private partial PublicClientApplicationBuilder AddPlatformConfiguration(PublicClientApplicationBuilder builder)
         {
             // No-op on Windows
             return builder;
