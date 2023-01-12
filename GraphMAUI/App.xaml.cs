@@ -8,12 +8,12 @@ namespace GraphMAUI;
 
 public partial class App : Application
 {
-	public App(
-		INavigationService navigationService,
+    public App(
+        INavigationService navigationService,
         AppShellViewModel viewModel)
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
 
-		MainPage = new AppShell(navigationService, viewModel);
-	}
+        MainPage = new AppShell(navigationService, viewModel);
+    }
 }

@@ -84,7 +84,7 @@ namespace GraphMAUI.ViewModels
         {
             get => CombineDateAndTime(StartDate, StartTime);
         }
-        
+
         private DateTime _endDate = DateTime.Today;
         /// <summary>
         /// The date portion of the end date and time. Required.
@@ -236,7 +236,7 @@ namespace GraphMAUI.ViewModels
                 {
                     Content = Body,
                     ContentType = BodyType.Text
-                };    
+                };
             }
 
             // If there are attendees, add them
@@ -258,9 +258,9 @@ namespace GraphMAUI.ViewModels
                             attendeeList.Add(new Attendee
                             {
                                 Type = AttendeeType.Required,
-                                EmailAddress = new EmailAddress 
-                                { 
-                                    Address = email 
+                                EmailAddress = new EmailAddress
+                                {
+                                    Address = email
                                 }
                             });
                         }
@@ -282,7 +282,7 @@ namespace GraphMAUI.ViewModels
                 await _navigationService.NavigateToAsync("//Calendar");
                 Reset();
             }
-            catch(ServiceException ex)
+            catch (ServiceException ex)
             {
                 IsBusy = false;
                 await _alertService.ShowAlertAsync(ex.Message, "Error", "OK");

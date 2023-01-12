@@ -1,7 +1,9 @@
-﻿using Android.App;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
-using Android.OS;
 using Android.Runtime;
 using Microsoft.Identity.Client;
 

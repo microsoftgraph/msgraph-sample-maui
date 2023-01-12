@@ -5,8 +5,8 @@ namespace GraphMAUI.Views;
 
 public partial class FlyoutHeaderView : ContentView
 {
-	public FlyoutHeaderView()
-	{
+    public FlyoutHeaderView()
+    {
         InitializeComponent();
     }
 }

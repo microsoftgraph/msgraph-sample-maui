@@ -68,7 +68,7 @@ namespace GraphMAUI.Services
                         requestConfiguration =>
                         {
                             requestConfiguration.QueryParameters.Select =
-                                new[] { "displayName", "mail", "mailboxSettings", "userPrincipalName" }; 
+                                new[] { "displayName", "mail", "mailboxSettings", "userPrincipalName" };
                         });
                 }
             }

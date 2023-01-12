@@ -1,6 +1,8 @@
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 using Android.App;
 using Android.Content;
-using Android.Runtime;
 using Microsoft.Identity.Client;
 
 namespace GraphMAUI

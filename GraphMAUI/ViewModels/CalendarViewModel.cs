@@ -61,7 +61,7 @@ namespace GraphMAUI.ViewModels
             RefreshCommand = new Command(
                 execute: async () =>
                 {
-                    await LoadEventsAsync();   
+                    await LoadEventsAsync();
                 });
 
             HandleSignInChange();

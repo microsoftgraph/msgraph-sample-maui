@@ -7,9 +7,9 @@ namespace GraphMAUI.Views;
 
 public partial class NewEventView : ContentPage
 {
-	public NewEventView(NewEventViewModel viewModel)
-	{
-		BindingContext = viewModel;
-		InitializeComponent();
-	}
+    public NewEventView(NewEventViewModel viewModel)
+    {
+        BindingContext = viewModel;
+        InitializeComponent();
+    }
 }

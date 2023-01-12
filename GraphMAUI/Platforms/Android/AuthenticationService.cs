@@ -13,7 +13,7 @@ namespace GraphMAUI.Services
             return Task.CompletedTask;
         }
 
-        private partial PublicClientApplicationBuilder AddPlatformConfiguration(PublicClientApplicationBuilder builder)
+        private partial PublicClientApplicationBuilder AddParentActivityOrWindow(PublicClientApplicationBuilder builder)
         {
             // MSAL on Android needs the current activity
             return builder.WithParentActivityOrWindow(() => Platform.CurrentActivity);

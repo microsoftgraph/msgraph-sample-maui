@@ -7,9 +7,9 @@ namespace GraphMAUI.Views;
 
 public partial class CalendarView : ContentPage
 {
-	public CalendarView(CalendarViewModel viewModel)
-	{
-		BindingContext = viewModel;
-		InitializeComponent();
-	}
+    public CalendarView(CalendarViewModel viewModel)
+    {
+        BindingContext = viewModel;
+        InitializeComponent();
+    }
 }

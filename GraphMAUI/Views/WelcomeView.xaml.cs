@@ -5,8 +5,8 @@ namespace GraphMAUI.Views;
 
 public partial class WelcomeView : ContentPage
 {
-	public WelcomeView()
-	{
-		InitializeComponent();
-	}
+    public WelcomeView()
+    {
+        InitializeComponent();
+    }
 }
