@@ -1,7 +1,0 @@
-{
-  "sourceDirectory": "./demo",
-  "exampleConfigFile": "./GraphTutorial/GraphTutorial/Models/OAuthSettings.cs.example",
-  "configFile": "OAuthSettings.cs",
-  "archiveFile": "XamarinQuickStart.zip",
-  "zipReadMe": "./README.md"
-}

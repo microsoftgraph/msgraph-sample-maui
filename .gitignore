@@ -332,6 +332,4 @@ ASALocalRun/
 # MacOS
 .DS_Store
 
-.vscode/
-OAuthSettings.cs
-XamarinQuickStart.zip
+appSettings.Development.json
