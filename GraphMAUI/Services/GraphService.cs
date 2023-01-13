@@ -31,10 +31,9 @@ namespace GraphMAUI.Services
         {
             var graphClient = _authenticationService.GraphClient;
 
-            //var timeZoneString = DeviceInfo.Current.Platform == DevicePlatform.WinUI ?
-            //    timeZone.StandardName : timeZone.DisplayName;
-            var timeZoneString = timeZone.StandardName;
-
+            var timeZoneString = DeviceInfo.Current.Platform == DevicePlatform.WinUI ?
+                timeZone.StandardName : timeZone.Id;
+            
             return graphClient.Me
                 .CalendarView
                 .GetAsync(requestConfiguration =>

@@ -87,7 +87,7 @@ namespace GraphMAUI.Services
                 .Create(_settingsService.ClientId)
                 .WithRedirectUri(_settingsService.RedirectUri);
 
-            builder = AddParentActivityOrWindow(builder);
+            builder = AddPlatformConfiguration(builder);
 
             var pca = builder.Build();
 
@@ -96,7 +96,7 @@ namespace GraphMAUI.Services
             return pca;
         }
 
-        private partial PublicClientApplicationBuilder AddParentActivityOrWindow(PublicClientApplicationBuilder builder);
+        private partial PublicClientApplicationBuilder AddPlatformConfiguration(PublicClientApplicationBuilder builder);
 
         private partial Task RegisterMsalCacheAsync(ITokenCache tokenCache);
         //{
