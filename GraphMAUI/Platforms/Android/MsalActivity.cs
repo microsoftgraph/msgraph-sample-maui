@@ -11,7 +11,7 @@ namespace GraphMAUI
     [IntentFilter(new[] { Intent.ActionView },
         Categories = new[] { Intent.CategoryBrowsable, Intent.CategoryDefault },
         DataHost = "auth",
-        DataScheme = "msal2a5044bb-da58-4e0d-8b85-e4d21298a3b2")]
+        DataScheme = "msalYOUR_CLIENT_ID_HERE")]
     public class MsalActivity : BrowserTabActivity
     {
     }
