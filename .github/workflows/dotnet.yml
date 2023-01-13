@@ -21,8 +21,11 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-    - name: Restore workloads
-      run: dotnet workload restore
+    - name: Install workloads
+      run: |
+        dotnet workload install android
+        dotnet workload install ios
+        dotnet workload install maui
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
