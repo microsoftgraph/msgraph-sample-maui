@@ -72,7 +72,7 @@
         <PackageReference Include="Microsoft.Graph" Version="5.0.0-rc.5" />
         <PackageReference Include="Microsoft.Identity.Client" Version="4.49.1" />
         <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.25.3" />
-        <PackageReference Include="TimeZoneConverter" Version="6.0.1" />
+        <PackageReference Include="TimeZoneConverter" Version="6.1.0" />
     </ItemGroup>
 
     <ItemGroup>
