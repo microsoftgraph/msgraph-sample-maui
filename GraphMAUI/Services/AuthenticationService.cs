@@ -173,14 +173,6 @@ namespace GraphMAUI.Services
             {
                 return null;
             }
-            catch (Exception ex)
-            {
-                throw new AuthenticationException(new Error()
-                {
-                    Code = "generalException",
-                    Message = "Unexpected exception occurred while authenticating the request."
-                }, ex);
-            }
         }
 
         /// <summary>
@@ -189,25 +181,14 @@ namespace GraphMAUI.Services
         /// <exception cref="AuthenticationException"></exception>
         private async Task<AuthenticationResult> GetTokenInteractivelyAsync()
         {
-            try
-            {
-                var pca = await _pca.Value;
+            var pca = await _pca.Value;
 
-                var result = await pca.AcquireTokenInteractive(_settingsService.GraphScopes)
-                    .ExecuteAsync();
+            var result = await pca.AcquireTokenInteractive(_settingsService.GraphScopes)
+                .ExecuteAsync();
 
-                // Store the user ID to make account retrieval easier
-                _userIdentifier = result.Account.HomeAccountId.Identifier;
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw new AuthenticationException(new Error()
-                {
-                    Code = "generalException",
-                    Message = "Unexpected exception occurred while authenticating the request."
-                }, ex);
-            }
+            // Store the user ID to make account retrieval easier
+            _userIdentifier = result.Account.HomeAccountId.Identifier;
+            return result;
         }
 
         public async Task AuthenticateRequestAsync(
