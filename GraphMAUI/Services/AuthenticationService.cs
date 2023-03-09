@@ -156,7 +156,6 @@ namespace GraphMAUI.Services
         /// <summary>
         /// Attempt to acquire a token silently (no prompts).
         /// </summary>
-        /// <exception cref="AuthenticationException"></exception>
         private async Task<AuthenticationResult> GetTokenSilentlyAsync()
         {
             try
@@ -178,7 +177,6 @@ namespace GraphMAUI.Services
         /// <summary>
         /// Attempts to get a token interactively using the device's browser.
         /// </summary>
-        /// <exception cref="AuthenticationException"></exception>
         private async Task<AuthenticationResult> GetTokenInteractivelyAsync()
         {
             var pca = await _pca.Value;
