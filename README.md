@@ -3,7 +3,6 @@ page_type: sample
 description: This sample demonstrates how to use the Microsoft Graph .NET SDK to access data in Office 365 from .NET MAUI apps.
 products:
 - ms-graph
-- microsoft-graph-calendar-api
 - office-exchange-online
 languages:
 - csharp
