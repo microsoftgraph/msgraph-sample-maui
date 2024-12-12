@@ -20,7 +20,7 @@ This sample demonstrates how to use the Microsoft Graph .NET SDK to access data 
 
 To run the completed project in this folder, you need the following:
 
-- Visual Studio 2022 Version 14.4.4 or later (Windows) or Visual Studio for Mac Version 14.4.2 or later (MacOS).
+- Visual Studio 2022 Version 17.12 or later (Windows) or Visual Studio for Mac Version 14.4.2 or later (MacOS).
 - Either a personal Microsoft account with a mailbox on Outlook.com, or a Microsoft work or school account.
 
 If you don't have a Microsoft account, there are a couple of options to get a free account:
@@ -30,9 +30,9 @@ If you don't have a Microsoft account, there are a couple of options to get a fr
 
 ## Register a web application with the Azure Active Directory admin center
 
-1. Open a browser and navigate to the [Azure Active Directory admin center](https://aad.portal.azure.com). Login using a **personal account** (aka: Microsoft Account) or **Work or School Account**.
+1. Open your browser and navigate to the [Microsoft Entra admin center](https://entra.microsoft.com/). Sign in with a **Work or School Account**.
 
-1. Select **Azure Active Directory** in the left-hand navigation, then select **App registrations** under **Manage**.
+1. Select **Applications** in the left-hand navigation bar, then select **App registrations**.
 
 1. Select **New registration**. On the **Register an application** page, set the values as follows.
 
