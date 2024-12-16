@@ -6,3 +6,9 @@ insert_final_newline = true
 [*.{cs,cshtml}]
 indent_size = 4
 dotnet_diagnostic.SA1101.severity = silent
+
+[*.xaml.sg.cs]
+dotnet_diagnostic.CS1591.severity = none
+
+[GraphMAUI/Resources/Fonts/*.cs]
+generated_code = true

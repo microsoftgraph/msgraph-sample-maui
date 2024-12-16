@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+  x:Class="GraphMAUI.AppShell"
+  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:local="clr-namespace:GraphMAUI"
+  xmlns:views="clr-namespace:GraphMAUI.Views"
+  xmlns:viewmodels="clr-namespace:GraphMAUI.ViewModels"
+  x:DataType="viewmodels:AppShellViewModel"
+  FlyoutHeaderBehavior="CollapseOnScroll"
+  Shell.NavBarIsVisible="False"
+  Title="GraphMAUI">
+
+  <Shell.FlyoutHeader>
+        <views:FlyoutHeaderView />
+    </Shell.FlyoutHeader>
+
+    <MenuItem Text="{Binding SignInOrOutText}" Command="{Binding SignInOrOutCommand}" />
+
+    <FlyoutItem FlyoutItemIsVisible="False">
+        <Tab>
+            <ShellContent Route="Login" ContentTemplate="{DataTemplate views:WelcomeView}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem FlyoutItemIsVisible="False">
+        <Tab>
+            <ShellContent Route="Calendar" ContentTemplate="{DataTemplate views:CalendarView}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem FlyoutItemIsVisible="False">
+        <Tab>
+            <ShellContent Route="NewEvent" ContentTemplate="{DataTemplate views:NewEventView}" />
+        </Tab>
+    </FlyoutItem>
+</Shell>

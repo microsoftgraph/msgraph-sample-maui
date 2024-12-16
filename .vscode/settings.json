@@ -1,6 +1,10 @@
 {
     "cSpell.words": [
-        "Browsable"
+      "adalcache",
+      "Browsable",
+      "graphmaui",
+      "Mvvm",
+      "tokencache"
     ],
     "cSpell.ignorePaths": [
     "package-lock.json",
@@ -11,6 +15,12 @@
     ".vscode",
     ".vscode-insiders",
     ".gitignore",
-    "*.csproj"
+    "*.csproj",
+    "GraphMAUI/Resources/**",
+    "*.plist",
+    "AndroidManifest.xml",
+    "GraphMAUI/Platforms/Tizen/**",
+    "*.appxmanifest",
+    "*.xaml"
   ]
 }
